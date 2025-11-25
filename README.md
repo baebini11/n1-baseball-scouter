@@ -13,7 +13,7 @@
 ```mermaid
 graph TD
     User[User / Client] -->|Access| CDN[Vercel CDN]
-    CDN -->|Serve Static Files| React[React SPA (Vite)]
+    CDN -->|Serve Static Files| React["React SPA (Vite)"]
     
     subgraph "Frontend Layer"
         React -->|State Management| Redux[Redux Toolkit]
