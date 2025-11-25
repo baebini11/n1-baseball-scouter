@@ -1,0 +1,116 @@
+    text-align: center;
+    }
+
+    .ticker-title {
+        font-family: 'Press Start 2P', cursive;
+        color: #39ff14;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 0 #006600;
+    }
+
+    .pip-button {
+        font-family: 'Press Start 2P', cursive;
+        font-size: 0.7rem;
+        padding: 10px;
+        background: #ff0055;
+        color: #fff;
+        border: 2px solid #fff;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.2s;
+    }
+
+    .pip-button:hover {
+        background: #fff;
+        color: #ff0055;
+    }
+
+    .ticker-content {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ticker-container-inner {
+        position: absolute;
+        width: 100%;
+        transition: transform 0.5s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    .ticker-item {
+        width: 100%;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .ticker-kanji {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        color: #fff;
+        text-shadow: 2px 2px 0 #333;
+        font-family: 'Noto Sans JP', sans-serif;
+        /* Readable Font */
+        font-weight: bold;
+    }
+
+    .ticker-furigana {
+        font-size: 1.2rem;
+        color: #39ff14;
+        margin-bottom: 15px;
+        font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
+        /* Readable Font */
+    }
+
+    .ticker-meaning {
+        font-size: 1rem;
+        color: #ddd;
+        line-height: 1.4;
+        margin-bottom: 15px;
+        font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
+        /* Readable Font */
+    }
+
+    .ticker-example {
+        font-size: 0.8rem;
+        color: #aaa;
+        font-style: italic;
+        border-top: 1px dashed #555;
+        padding-top: 10px;
+        font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
+        /* Readable Font */
+    }
+
+    /* Progress Bar */
+    .ticker-progress {
+        height: 4px;
+        background: #333;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: #39ff14;
+        transition: width 0.1s linear;
+    }

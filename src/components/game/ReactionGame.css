@@ -1,0 +1,263 @@
+.reaction-game {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    font-family: 'Press Start 2P', cursive;
+    color: #fff;
+}
+
+.game-menu,
+.result-screen,
+.review-screen {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    border: 4px solid #fff;
+    padding: 30px;
+    box-shadow: 8px 8px 0 #000;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.game-title {
+    font-size: 1.5rem;
+    color: #ff0055;
+    text-shadow: 4px 4px 0 #000;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.stats-display {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    color: #39ff14;
+}
+
+.xp-bar-container {
+    width: 100%;
+    height: 20px;
+    background: #333;
+    border: 2px solid #fff;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.xp-bar {
+    height: 100%;
+    background: #39ff14;
+    transition: width 0.5s ease-out;
+}
+
+.menu-btn {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 20px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    border: 4px solid #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    text-align: center;
+}
+
+.menu-btn:hover:not(:disabled) {
+    transform: translate(-4px, -4px);
+    box-shadow: 6px 6px 0 #000;
+}
+
+.menu-btn:active:not(:disabled) {
+    transform: translate(0, 0);
+    box-shadow: none;
+}
+
+.menu-btn.normal {
+    background: #00ffff;
+    color: #000;
+}
+
+.menu-btn.boss {
+    background: #ff0055;
+    color: #fff;
+}
+
+.menu-btn.boss.locked {
+    background: #555;
+    color: #888;
+    border-color: #888;
+    cursor: not-allowed;
+}
+
+.menu-btn.exit {
+    background: #fff;
+    color: #000;
+}
+
+.menu-btn.review {
+    background: #ffcc00;
+    color: #000;
+}
+
+.btn-sub {
+    display: block;
+    font-size: 0.6rem;
+    margin-top: 5px;
+    font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
+    /* Readable Font */
+    font-weight: bold;
+}
+
+/* Game Interface */
+.game-interface {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-header {
+    margin-bottom: 20px;
+}
+
+.timer-bar {
+    height: 10px;
+    background: #ff0055;
+    margin-bottom: 10px;
+    transition: width 1s linear;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #39ff14;
+}
+
+.question-display {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 4px 4px 0 #000;
+    font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
+    /* Readable Font */
+    font-weight: bold;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.option-btn {
+    padding: 20px;
+    font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
+    /* Readable Font */
+    font-size: 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #fff;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+50% {
+    transform: scale(1.1);
+}
+
+100% {
+    transform: scale(1);
+}
+}
+
+/* Review Screen Styles */
+.review-screen {
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.review-screen h2 {
+    color: #ffcc00;
+    margin-bottom: 20px;
+}
+
+.review-list-container {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    text-align: left;
+    padding-right: 10px;
+}
+
+.review-list-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.review-list-container::-webkit-scrollbar-track {
+    background: #333;
+}
+
+.review-list-container::-webkit-scrollbar-thumb {
+    background: #fff;
+}
+
+.review-item {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #ff0055;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.review-q-text {
+    font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
+    /* Readable Font */
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.review-a-text {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+.review-a-text span {
+    color: #39ff14;
+    font-weight: bold;
+    font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
+    /* Readable Font */
+}
+
+.review-detail {
+    font-size: 0.8rem;
+    color: #ddd;
+    border-top: 1px solid #555;
+    padding-top: 5px;
+    margin-top: 5px;
+    font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
+    /* Readable Font */
+}

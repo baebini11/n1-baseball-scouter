@@ -1,0 +1,722 @@
+[
+    {
+        "id": 1,
+        "kanji": "露骨",
+        "furigana": "ろこつ",
+        "meaning": "노골적임, 숨김없음",
+        "example": "彼は不満を露骨に顔に出した。",
+        "example_meaning": "그는 불만을 노골적으로 얼굴에 드러냈다."
+    },
+    {
+        "id": 2,
+        "kanji": "巧妙",
+        "furigana": "こうみょう",
+        "meaning": "교묘함, 솜씨가 좋음",
+        "example": "犯人は巧妙な手口で警察を欺いた。",
+        "example_meaning": "범인은 교묘한 수법으로 경찰을 속였다."
+    },
+    {
+        "id": 3,
+        "kanji": "緩和",
+        "furigana": "かんわ",
+        "meaning": "완화",
+        "example": "政府は規制緩和の方針を打ち出した。",
+        "example_meaning": "정부는 규제 완화 방침을 내세웠다."
+    },
+    {
+        "id": 4,
+        "kanji": "迅速",
+        "furigana": "じんそく",
+        "meaning": "신속함",
+        "example": "事故が発生した場合、迅速な対応が求められる。",
+        "example_meaning": "사고가 발생했을 경우, 신속한 대응이 요구된다."
+    },
+    {
+        "id": 5,
+        "kanji": "顕著",
+        "furigana": "けんちょ",
+        "meaning": "현저함, 두드러짐",
+        "example": "新薬の効果が顕著に現れた。",
+        "example_meaning": "신약의 효과가 현저하게 나타났다."
+    },
+    {
+        "id": 6,
+        "kanji": "把握",
+        "furigana": "はあく",
+        "meaning": "파악",
+        "example": "現状を正確に把握することが重要だ。",
+        "example_meaning": "현상을 정확하게 파악하는 것이 중요하다."
+    },
+    {
+        "id": 7,
+        "kanji": "懸念",
+        "furigana": "けねん",
+        "meaning": "우려, 걱정",
+        "example": "環境への悪影響が懸念されている。",
+        "example_meaning": "환경에 대한 악영향이 우려되고 있다."
+    },
+    {
+        "id": 8,
+        "kanji": "示唆",
+        "furigana": "しさ",
+        "meaning": "시사, 암시",
+        "example": "彼の発言は解決への道を示唆している。",
+        "example_meaning": "그의 발언은 해결로 가는 길을 시사하고 있다."
+    },
+    {
+        "id": 9,
+        "kanji": "矛盾",
+        "furigana": "むじゅん",
+        "meaning": "모순",
+        "example": "彼の説明には矛盾がある。",
+        "example_meaning": "그의 설명에는 모순이 있다."
+    },
+    {
+        "id": 10,
+        "kanji": "模索",
+        "furigana": "もさく",
+        "meaning": "모색",
+        "example": "解決策を模索している段階だ。",
+        "example_meaning": "해결책을 모색하고 있는 단계다."
+    },
+    {
+        "id": 11,
+        "kanji": "享受",
+        "furigana": "きょうじゅ",
+        "meaning": "향유, 누림",
+        "example": "自由を享受する権利がある。",
+        "example_meaning": "자유를 누릴 권리가 있다."
+    },
+    {
+        "id": 12,
+        "kanji": "拍車",
+        "furigana": "はくしゃ",
+        "meaning": "박차, 더욱 힘을 가함",
+        "example": "開発に拍車がかかる。",
+        "example_meaning": "개발에 박차가 가해지다."
+    },
+    {
+        "id": 13,
+        "kanji": "不服",
+        "furigana": "ふふく",
+        "meaning": "불복, 납득하지 않음",
+        "example": "判決に不服を申し立てる。",
+        "example_meaning": "판결에 불복을 신청하다."
+    },
+    {
+        "id": 14,
+        "kanji": "没頭",
+        "furigana": "ぼっとう",
+        "meaning": "몰두",
+        "example": "彼は研究に没頭している。",
+        "example_meaning": "그는 연구에 몰두하고 있다."
+    },
+    {
+        "id": 15,
+        "kanji": "融通",
+        "furigana": "ゆうずう",
+        "meaning": "융통",
+        "example": "融通が利かない人だ。",
+        "example_meaning": "융통성이 없는 사람이다."
+    },
+    {
+        "id": 16,
+        "kanji": "露呈",
+        "furigana": "ろてい",
+        "meaning": "노정, 드러남",
+        "example": "準備不足が露呈した。",
+        "example_meaning": "준비 부족이 드러났다."
+    },
+    {
+        "id": 17,
+        "kanji": "歪曲",
+        "furigana": "わいきょく",
+        "meaning": "왜곡",
+        "example": "事実を歪曲して伝える。",
+        "example_meaning": "사실을 왜곡해서 전하다."
+    },
+    {
+        "id": 18,
+        "kanji": "斡旋",
+        "furigana": "あっせん",
+        "meaning": "알선",
+        "example": "職を斡旋する。",
+        "example_meaning": "일자리를 알선하다."
+    },
+    {
+        "id": 19,
+        "kanji": "逸脱",
+        "furigana": "いつだつ",
+        "meaning": "일탈",
+        "example": "常識を逸脱した行為だ。",
+        "example_meaning": "상식을 벗어난 행위다."
+    },
+    {
+        "id": 20,
+        "kanji": "隠蔽",
+        "furigana": "いんぺい",
+        "meaning": "은폐",
+        "example": "証拠を隠蔽しようとした。",
+        "example_meaning": "증거를 은폐하려고 했다."
+    },
+    {
+        "id": 21,
+        "kanji": "還元",
+        "furigana": "かんげん",
+        "meaning": "환원",
+        "example": "利益を社会に還元する。",
+        "example_meaning": "이익을 사회에 환원하다."
+    },
+    {
+        "id": 22,
+        "kanji": "均衡",
+        "furigana": "きんこう",
+        "meaning": "균형",
+        "example": "力の均衡が保たれている。",
+        "example_meaning": "힘의 균형이 유지되고 있다."
+    },
+    {
+        "id": 23,
+        "kanji": "愚痴",
+        "furigana": "ぐち",
+        "meaning": "푸념",
+        "example": "酒を飲んで愚痴をこぼす。",
+        "example_meaning": "술을 마시고 푸념을 늘어놓다."
+    },
+    {
+        "id": 24,
+        "kanji": "牽引",
+        "furigana": "けんいん",
+        "meaning": "견인",
+        "example": "チームを牽引するリーダー。",
+        "example_meaning": "팀을 이끄는 리더."
+    },
+    {
+        "id": 25,
+        "kanji": "誇張",
+        "furigana": "こちょう",
+        "meaning": "과장",
+        "example": "話を誇張して話す。",
+        "example_meaning": "이야기를 과장해서 말하다."
+    },
+    {
+        "id": 26,
+        "kanji": "錯覚",
+        "furigana": "さっかく",
+        "meaning": "착각",
+        "example": "目の錯覚を利用したアート。",
+        "example_meaning": "눈의 착각을 이용한 예술."
+    },
+    {
+        "id": 27,
+        "kanji": "遮断",
+        "furigana": "しゃだん",
+        "meaning": "차단",
+        "example": "交通を遮断する。",
+        "example_meaning": "교통을 차단하다."
+    },
+    {
+        "id": 28,
+        "kanji": "折衷",
+        "furigana": "せっちゅう",
+        "meaning": "절충",
+        "example": "和洋折衷の料理。",
+        "example_meaning": "화양절충(일본식과 서양식의 조화) 요리."
+    },
+    {
+        "id": 29,
+        "kanji": "束縛",
+        "furigana": "そくばく",
+        "meaning": "속박",
+        "example": "時間を束縛されるのが嫌だ。",
+        "example_meaning": "시간을 뺏기는(속박당하는) 것이 싫다."
+    },
+    {
+        "id": 30,
+        "kanji": "打開",
+        "furigana": "だかい",
+        "meaning": "타개",
+        "example": "現状を打開する策を練る。",
+        "example_meaning": "현상을 타개할 대책을 짜다."
+    },
+    {
+        "id": 31,
+        "kanji": "威嚇",
+        "furigana": "いかく",
+        "meaning": "위협",
+        "example": "敵を威嚇する。",
+        "example_meaning": "적을 위협하다."
+    },
+    {
+        "id": 32,
+        "kanji": "委託",
+        "furigana": "いたく",
+        "meaning": "위탁",
+        "example": "業務を外部に委託する。",
+        "example_meaning": "업무를 외부에 위탁하다."
+    },
+    {
+        "id": 33,
+        "kanji": "祈願",
+        "furigana": "きがん",
+        "meaning": "기원",
+        "example": "合格を祈願する。",
+        "example_meaning": "합격을 기원하다."
+    },
+    {
+        "id": 34,
+        "kanji": "棄却",
+        "furigana": "ききゃく",
+        "meaning": "기각",
+        "example": "訴えを棄却する。",
+        "example_meaning": "소송을 기각하다."
+    },
+    {
+        "id": 35,
+        "kanji": "偽造",
+        "furigana": "ぎぞう",
+        "meaning": "위조",
+        "example": "パスポートを偽造する。",
+        "example_meaning": "여권을 위조하다."
+    },
+    {
+        "id": 36,
+        "kanji": "救援",
+        "furigana": "きゅうえん",
+        "meaning": "구원",
+        "example": "被災地に救援物資を送る。",
+        "example_meaning": "재해지에 구원 물자를 보내다."
+    },
+    {
+        "id": 37,
+        "kanji": "驚嘆",
+        "furigana": "きょうたん",
+        "meaning": "경탄",
+        "example": "彼の才能に驚嘆する。",
+        "example_meaning": "그의 재능에 경탄하다."
+    },
+    {
+        "id": 38,
+        "kanji": "緊密",
+        "furigana": "きんみつ",
+        "meaning": "긴밀",
+        "example": "両国は緊密な関係にある。",
+        "example_meaning": "양국은 긴밀한 관계에 있다."
+    },
+    {
+        "id": 39,
+        "kanji": "掲載",
+        "furigana": "けいさい",
+        "meaning": "게재",
+        "example": "新聞に記事が掲載された。",
+        "example_meaning": "신문에 기사가 게재되었다."
+    },
+    {
+        "id": 40,
+        "kanji": "傾斜",
+        "furigana": "けいしゃ",
+        "meaning": "경사",
+        "example": "この坂は傾斜が急だ。",
+        "example_meaning": "이 언덕은 경사가 급하다."
+    },
+    {
+        "id": 41,
+        "kanji": "欠如",
+        "furigana": "けつじょ",
+        "meaning": "결여",
+        "example": "責任感が欠如している。",
+        "example_meaning": "책임감이 결여되어 있다."
+    },
+    {
+        "id": 42,
+        "kanji": "見解",
+        "furigana": "けんかい",
+        "meaning": "견해",
+        "example": "政府の見解を発表する。",
+        "example_meaning": "정부의 견해를 발표하다."
+    },
+    {
+        "id": 43,
+        "kanji": "誇示",
+        "furigana": "こじ",
+        "meaning": "과시",
+        "example": "権力を誇示する。",
+        "example_meaning": "권력을 과시하다."
+    },
+    {
+        "id": 44,
+        "kanji": "固執",
+        "furigana": "こしつ",
+        "meaning": "고집",
+        "example": "自説に固執する。",
+        "example_meaning": "자기 주장을 고집하다."
+    },
+    {
+        "id": 45,
+        "kanji": "挫折",
+        "furigana": "ざせつ",
+        "meaning": "좌절",
+        "example": "夢半ばで挫折する。",
+        "example_meaning": "꿈을 이루지 못하고 도중에 좌절하다."
+    },
+    {
+        "id": 46,
+        "kanji": "参照",
+        "furigana": "さんしょう",
+        "meaning": "참조",
+        "example": "詳しくはウェブサイトを参照してください。",
+        "example_meaning": "자세한 내용은 웹사이트를 참조해 주세요."
+    },
+    {
+        "id": 47,
+        "kanji": "思考",
+        "furigana": "しこう",
+        "meaning": "사고",
+        "example": "柔軟な思考が必要だ。",
+        "example_meaning": "유연한 사고가 필요하다."
+    },
+    {
+        "id": 48,
+        "kanji": "始末",
+        "furigana": "しまつ",
+        "meaning": "시말, 처분, 결과",
+        "example": "この始末だ。",
+        "example_meaning": "이 꼴이다(결과다)."
+    },
+    {
+        "id": 49,
+        "kanji": "釈明",
+        "furigana": "しゃめい",
+        "meaning": "설명",
+        "example": "問題を釈明する。",
+        "example_meaning": "문제를 설명하다."
+    },
+    {
+        "id": 50,
+        "kanji": "需要",
+        "furigana": "じゅよう",
+        "meaning": "수요",
+        "example": "需要と供給のバランス。",
+        "example_meaning": "수요와 공급의 균형."
+    },
+    {
+        "id": 51,
+        "kanji": "随時",
+        "furigana": "ずいじ",
+        "meaning": "수시로, 그때그때",
+        "example": "随時報告してください。",
+        "example_meaning": "수시로 보고해 주세요."
+    },
+    {
+        "id": 52,
+        "kanji": "遂行",
+        "furigana": "すいこう",
+        "meaning": "수행",
+        "example": "任務を遂行する。",
+        "example_meaning": "임무를 수행하다."
+    },
+    {
+        "id": 53,
+        "kanji": "是正",
+        "furigana": "ぜせい",
+        "meaning": "시정, 바로잡음",
+        "example": "格差を是正する。",
+        "example_meaning": "격차를 시정하다."
+    },
+    {
+        "id": 54,
+        "kanji": "喪失",
+        "furigana": "そうしつ",
+        "meaning": "상실",
+        "example": "自信を喪失する。",
+        "example_meaning": "자신감을 상실하다."
+    },
+    {
+        "id": 55,
+        "kanji": "妥結",
+        "furigana": "だけつ",
+        "meaning": "타결",
+        "example": "交渉が妥結した。",
+        "example_meaning": "교섭이 타결되었다."
+    },
+    {
+        "id": 56,
+        "kanji": "探る",
+        "furigana": "さぐる",
+        "meaning": "살피다, 탐색하다",
+        "example": "敵の動向を探る。",
+        "example_meaning": "적의 동향을 살피다."
+    },
+    {
+        "id": 57,
+        "kanji": "蓄積",
+        "furigana": "ちくせき",
+        "meaning": "축적",
+        "example": "疲労が蓄積している。",
+        "example_meaning": "피로가 축적되어 있다."
+    },
+    {
+        "id": 58,
+        "kanji": "躊躇",
+        "furigana": "ちゅうちょ",
+        "meaning": "주저, 망설임",
+        "example": "判断を躊躇する。",
+        "example_meaning": "판단을 주저하다."
+    },
+    {
+        "id": 59,
+        "kanji": "到底",
+        "furigana": "とうてい",
+        "meaning": "도저히",
+        "example": "到底間に合わない。",
+        "example_meaning": "도저히 시간에 댈 수 없다."
+    },
+    {
+        "id": 60,
+        "kanji": "統合",
+        "furigana": "とうごう",
+        "meaning": "통합",
+        "example": "二つの会社が統合する。",
+        "example_meaning": "두 회사가 통합한다."
+    },
+    {
+        "id": 61,
+        "kanji": "投入",
+        "furigana": "とうにゅう",
+        "meaning": "투입",
+        "example": "新製品を市場に投入する。",
+        "example_meaning": "신제품을 시장에 투입하다."
+    },
+    {
+        "id": 62,
+        "kanji": "突破",
+        "furigana": "とっぱ",
+        "meaning": "돌파",
+        "example": "難関を突破する。",
+        "example_meaning": "난관을 돌파하다."
+    },
+    {
+        "id": 63,
+        "kanji": "嘆く",
+        "furigana": "なげく",
+        "meaning": "한탄하다, 슬퍼하다",
+        "example": "不運を嘆く。",
+        "example_meaning": "불운을 한탄하다."
+    },
+    {
+        "id": 64,
+        "kanji": "納得",
+        "furigana": "なっとく",
+        "meaning": "납득",
+        "example": "説明を聞いて納得した。",
+        "example_meaning": "설명을 듣고 납득했다."
+    },
+    {
+        "id": 65,
+        "kanji": "入手",
+        "furigana": "にゅうしゅ",
+        "meaning": "입수",
+        "example": "情報を入手する。",
+        "example_meaning": "정보를 입수하다."
+    },
+    {
+        "id": 66,
+        "kanji": "念願",
+        "furigana": "ねんがん",
+        "meaning": "염원",
+        "example": "念願のマイホームを手に入れた。",
+        "example_meaning": "염원하던 내 집을 장만했다."
+    },
+    {
+        "id": 67,
+        "kanji": "廃棄",
+        "furigana": "はいき",
+        "meaning": "폐기",
+        "example": "産業廃棄物を処理する。",
+        "example_meaning": "산업 폐기물을 처리하다."
+    },
+    {
+        "id": 68,
+        "kanji": "媒体",
+        "furigana": "ばいたい",
+        "meaning": "매체",
+        "example": "広告媒体を選ぶ。",
+        "example_meaning": "광고 매체를 고르다."
+    },
+    {
+        "id": 69,
+        "kanji": "拍手",
+        "furigana": "はくしゅ",
+        "meaning": "박수",
+        "example": "盛大な拍手を送る。",
+        "example_meaning": "성대한 박수를 보내다."
+    },
+    {
+        "id": 70,
+        "kanji": "発揮",
+        "furigana": "はっき",
+        "meaning": "발휘",
+        "example": "実力を発揮する。",
+        "example_meaning": "실력을 발휘하다."
+    },
+    {
+        "id": 71,
+        "kanji": "根拠",
+        "furigana": "こんきょ",
+        "meaning": "근거",
+        "example": "その主張には何の根拠もない。",
+        "example_meaning": "그 주장에는 아무런 근거도 없다."
+    },
+    {
+        "id": 72,
+        "kanji": "手薄",
+        "furigana": "てうす",
+        "meaning": "허술함, 불충분함",
+        "example": "警備が手薄なところを狙われた。",
+        "example_meaning": "경비가 허술한 곳을 노려졌다."
+    },
+    {
+        "id": 73,
+        "kanji": "華々しい",
+        "furigana": "はなばなしい",
+        "meaning": "화려하다, 눈부시다",
+        "example": "彼はオリンピックで華々しい活躍を見せた。",
+        "example_meaning": "그는 올림픽에서 눈부신 활약을 보였다."
+    },
+    {
+        "id": 74,
+        "kanji": "覆す",
+        "furigana": "くつがえす",
+        "meaning": "뒤집다, 뒤엎다",
+        "example": "最高裁はこれまでの判決を覆した。",
+        "example_meaning": "대법원은 지금까지의 판결을 뒤집었다."
+    },
+    {
+        "id": 75,
+        "kanji": "克明",
+        "furigana": "こくめい",
+        "meaning": "극명, 자세하고 꼼꼼함",
+        "example": "事故の経緯を克明に記録する。",
+        "example_meaning": "사고 경위를 꼼꼼하게 기록하다."
+    },
+    {
+        "id": 76,
+        "kanji": "踏襲",
+        "furigana": "とうしゅう",
+        "meaning": "답습",
+        "example": "前例を踏襲するだけでは改革はできない。",
+        "example_meaning": "전례를 답습하는 것만으로는 개혁할 수 없다."
+    },
+    {
+        "id": 77,
+        "kanji": "漂う",
+        "furigana": "ただよう",
+        "meaning": "떠돌다, 감돌다",
+        "example": "部屋に甘い香りが漂っている。",
+        "example_meaning": "방에 달콤한 향기가 감돌고 있다."
+    },
+    {
+        "id": 78,
+        "kanji": "廃れる",
+        "furigana": "すたれる",
+        "meaning": "쇠퇴하다, 유행이 지나다",
+        "example": "その風習は今ではすっかり廃れてしまった。",
+        "example_meaning": "그 풍습은 지금은 완전히 사라져 버렸다."
+    },
+    {
+        "id": 79,
+        "kanji": "蓄える",
+        "furigana": "たくわえる",
+        "meaning": "저축하다, 비축하다, 기르다",
+        "example": "万一に備えて食料を蓄える。",
+        "example_meaning": "만일에 대비해 식량을 비축하다."
+    },
+    {
+        "id": 80,
+        "kanji": "阻む",
+        "furigana": "はばむ",
+        "meaning": "저지하다, 막다",
+        "example": "行く手を大きな岩に阻まれた。",
+        "example_meaning": "가는 길을 큰 바위에 가로막혔다."
+    },
+    {
+        "id": 81,
+        "kanji": "潔い",
+        "furigana": "いさぎよい",
+        "meaning": "깨끗하다, 미련 없다, 떳떳하다",
+        "example": "負けを潔く認める。",
+        "example_meaning": "패배를 깨끗이 인정하다."
+    },
+    {
+        "id": 82,
+        "kanji": "催す",
+        "furigana": "もよおす",
+        "meaning": "개최하다, (기분·증상을) 느끼다",
+        "example": "歓迎会を催すことになった。",
+        "example_meaning": "환영회를 개최하게 되었다."
+    },
+    {
+        "id": 83,
+        "kanji": "和らぐ",
+        "furigana": "やわらぐ",
+        "meaning": "누그러지다, 완화되다",
+        "example": "薬を飲んだら痛みが和らいだ。",
+        "example_meaning": "약을 먹었더니 통증이 누그러졌다."
+    },
+    {
+        "id": 84,
+        "kanji": "食い止める",
+        "furigana": "くいとめる",
+        "meaning": "저지하다, 막아내다",
+        "example": "感染の拡大を食い止める必要がある。",
+        "example_meaning": "감염 확대를 막을 필요가 있다."
+    },
+    {
+        "id": 85,
+        "kanji": "駆使",
+        "furigana": "くし",
+        "meaning": "구사",
+        "example": "最新の技術を駆使して作られた。",
+        "example_meaning": "최신 기술을 구사하여 만들어졌다."
+    },
+    {
+        "id": 86,
+        "kanji": "担う",
+        "furigana": "になう",
+        "meaning": "짊어지다, 떠맡다",
+        "example": "次世代を担う若者たち。",
+        "example_meaning": "차세대를 짊어질 젊은이들."
+    },
+    {
+        "id": 87,
+        "kanji": "没頭",
+        "furigana": "ぼっとう",
+        "meaning": "몰두",
+        "example": "彼は時間を忘れて研究に没頭した。",
+        "example_meaning": "그는 시간을 잊고 연구에 몰두했다."
+    },
+    {
+        "id": 88,
+        "kanji": "工面",
+        "furigana": "くめん",
+        "meaning": "마련함, 주선함(돈 등)",
+        "example": "なんとか資金を工面しなければならない。",
+        "example_meaning": "어떻게든 자금을 마련해야 한다."
+    },
+    {
+        "id": 89,
+        "kanji": "連携",
+        "furigana": "れんけい",
+        "meaning": "연계",
+        "example": "他社と連携して新商品を開発する。",
+        "example_meaning": "타사와 연계하여 신상품을 개발하다."
+    },
+    {
+        "id": 90,
+        "kanji": "発足",
+        "furigana": "ほっそく",
+        "meaning": "발족",
+        "example": "新しい委員会が発足した。",
+        "example_meaning": "새로운 위원회가 발족했다."
+    }
+]
