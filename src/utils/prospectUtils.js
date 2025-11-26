@@ -10,11 +10,11 @@ export const BASIC_STATS = [
 ];
 
 export const RARITY_TYPES = {
-    GENIUS: { id: 'genius', label: '천재 (Genius)', minPot: 420, maxPot: 480, color: '#ff00ff', prob: 0.05 },
-    ACE: { id: 'ace', label: '에이스 (Ace)', minPot: 360, maxPot: 419, color: '#ffd700', prob: 0.15 },
-    SOLID: { id: 'solid', label: '솔리드 (Solid)', minPot: 300, maxPot: 359, color: '#00ffff', prob: 0.40 },
-    HARD_WORKER: { id: 'hard_worker', label: '노력가 (Hard Worker)', minPot: 120, maxPot: 300, color: '#00ff00', prob: 0.25 },
-    LATE_BLOOMER: { id: 'late_bloomer', minPot: 120, maxPot: 420, color: '#ff5500', prob: 0.15 }
+    GENIUS: { id: 'genius', label: '천재', minPot: 420, maxPot: 480, color: '#ff00ff', prob: 0.05 },
+    ACE: { id: 'ace', label: '에이스', minPot: 360, maxPot: 419, color: '#ffd700', prob: 0.15 },
+    SOLID: { id: 'solid', label: '솔리드', minPot: 300, maxPot: 359, color: '#00ffff', prob: 0.40 },
+    HARD_WORKER: { id: 'hard_worker', label: '노력가', minPot: 120, maxPot: 300, color: '#00ff00', prob: 0.25 },
+    LATE_BLOOMER: { id: 'late_bloomer', label: '대기만성', minPot: 120, maxPot: 420, color: '#ff5500', prob: 0.15 }
 };
 
 export const TRAITS = [
@@ -29,6 +29,47 @@ export const TRAITS = [
 export const BREAKING_BALL_TYPES = [
     'Slider', 'Curve', 'Cutter', 'Changeup', 'Fork', 'Sinker', 'Splitter', 'Knuckle', 'Screwball'
 ];
+
+const CAREER_TITLES = {
+    S: ["명예의 전당 헌액자", "전설적인 아이콘", "국민 영웅", "역대 최고 (GOAT)"],
+    A: ["단골 올스타", "프랜차이즈 스타", "팬들의 아이돌", "리그 리더"],
+    B: ["든든한 주전", "믿음직한 베테랑", "팀의 주장", "꾸준함의 대명사"],
+    C: ["로테이션 멤버", "저니맨", "벤치 멤버", "평범한 선수"],
+    D: ["마이너리거", "잠깐의 1군 경험", "짧은 경력", "아쉬운 유망주"]
+};
+
+const CAREER_DESCRIPTIONS = {
+    S: [
+        "수세대에 걸쳐 기억될 전설적인 커리어입니다.",
+        "리그를 지배하며 수많은 신기록을 세웠습니다.",
+        "만장일치로 명예의 전당에 입성했습니다.",
+        "20년 동안 야구계를 대표하는 얼굴이었습니다."
+    ],
+    A: [
+        "오랜 기간 동안 리그 최상위권에서 활약했습니다.",
+        "수차례 올스타에 선정되며 팀의 핵심이 되었습니다.",
+        "10년 넘게 팀을 지탱한 프랜차이즈 스타입니다.",
+        "항상 리그 타이틀 경쟁을 펼친 선수입니다."
+    ],
+    B: [
+        "길고 존경받을 만한 커리어를 보냈습니다.",
+        "팀의 라인업/로테이션을 든든하게 지켰습니다.",
+        "팀에 안정감과 리더십을 불어넣었습니다.",
+        "몇 번의 눈부신 시즌과 꾸준한 활약을 보여주었습니다."
+    ],
+    C: [
+        "주전 경쟁에서 밀리기도 했지만 제 몫을 다했습니다.",
+        "여러 팀을 옮겨 다니며 선수 생활을 이어갔습니다.",
+        "반짝 활약했지만 꾸준함이 조금 아쉬웠습니다.",
+        "몇 년간 팀의 백업 요원으로 활약했습니다."
+    ],
+    D: [
+        "프로의 벽을 넘기에는 조금 역부족이었습니다.",
+        "가능성은 보였으나 부상이나 부진으로 일찍 은퇴했습니다.",
+        "대부분의 시간을 2군에서 보냈습니다.",
+        "다른 진로를 찾아 일찍 은퇴를 결심했습니다."
+    ]
+};
 
 
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -230,35 +271,43 @@ export const calculateBaseballStats = (prospect, level) => {
                 },
                 control: {
                     label: 'Control (제구)',
-                    current: Math.min(40, calcStat(getAvg('grip_strength', 'flexibility', 'current'))),
-                    potential: Math.min(80, calcStat(getAvg('grip_strength', 'flexibility', 'potential')))
+                    current: Math.min(40, calcStat(getAvg('flexibility', 'grip_strength', 'current'))),
+                    potential: Math.min(80, calcStat(getAvg('flexibility', 'grip_strength', 'potential')))
                 },
                 breaking: {
                     label: 'Breaking (변화)',
                     current: breakingCurrent,
-                    potential: breakingPotential,
-                    pitches: {
-                        current: generatePitches(breakingCurrent),
-                        potential: generatePitches(breakingPotential)
-                    }
-                }
+                    potential: breakingPotential
+                },
+                pitches: generatePitches(breakingPotential)
             };
         } else {
+            // Fielder
             stats = {
-                power: {
-                    label: 'Power (파워)',
-                    current: Math.min(40, calcStat(getWeightedAvg('power', 'bat_speed', 'grip_strength', 'current'))),
-                    potential: Math.min(80, calcStat(getWeightedAvg('power', 'bat_speed', 'grip_strength', 'potential')))
-                },
                 contact: {
                     label: 'Contact (컨택)',
-                    current: Math.min(40, calcStat(getWeightedAvg('bat_speed', 'flexibility', 'grip_strength', 'current'))),
-                    potential: Math.min(80, calcStat(getWeightedAvg('bat_speed', 'flexibility', 'grip_strength', 'potential')))
+                    current: Math.min(40, calcStat(getAvg('bat_speed', 'flexibility', 'current'))),
+                    potential: Math.min(80, calcStat(getAvg('bat_speed', 'flexibility', 'potential')))
+                },
+                power: {
+                    label: 'Power (파워)',
+                    current: Math.min(40, calcStat(getAvg('power', 'bat_speed', 'current'))),
+                    potential: Math.min(80, calcStat(getAvg('power', 'bat_speed', 'potential')))
                 },
                 defense: {
-                    label: 'Defense (수비/주루)',
-                    current: Math.min(40, calcStat(getAvg('speed', 'throwing', 'current'))),
-                    potential: Math.min(80, calcStat(getAvg('speed', 'throwing', 'potential')))
+                    label: 'Defense (수비)',
+                    current: Math.min(40, calcStat(getWeightedAvg('speed', 'flexibility', 'grip_strength', 'current'))),
+                    potential: Math.min(80, calcStat(getWeightedAvg('speed', 'flexibility', 'grip_strength', 'potential')))
+                },
+                speed: {
+                    label: 'Speed (주루)',
+                    current: Math.min(40, calcStat(prospect.stats.speed.current)),
+                    potential: Math.min(80, calcStat(prospect.stats.speed.potential))
+                },
+                throwing: {
+                    label: 'Throwing (송구)',
+                    current: Math.min(40, calcStat(prospect.stats.throwing.current)),
+                    potential: Math.min(80, calcStat(prospect.stats.throwing.potential))
                 }
             };
         }
@@ -271,226 +320,186 @@ export const calculateBaseballStats = (prospect, level) => {
     };
 };
 
-export const simulateProCareer = (prospect) => {
+export const calculateCareerStats = (prospect) => {
     const role = prospect.position === 'Pitcher' ? 'pitcher' : 'fielder';
     const skills = prospect.baseballSkills[role];
-    const isPitcher = role === 'pitcher';
 
-    // Base ratings (0-100 scale roughly)
-    // Use potential as the "Peak" ability
-    const potentialRating = isPitcher
+    // Base Performance Calculation
+    let basePerformance = 0;
+    if (role === 'pitcher') {
+        const stuff = skills.stuff.current;
+        const control = skills.control.current;
+        const breaking = skills.breaking.current;
+        basePerformance = (stuff * 0.4 + control * 0.3 + breaking * 0.3) / 100;
+    } else {
+        const contact = skills.contact.current;
+        const power = skills.power.current;
+        const defense = skills.defense.current;
+        basePerformance = (contact * 0.4 + power * 0.4 + defense * 0.2) / 100;
+    }
+
+    // Dynamic Career Length
+    // Base: 5 years
+    // Potential Bonus: up to +10 years (potential 20-80 -> 0.2-0.8 -> * 12?)
+    // Random: +/- 3 years
+    const potentialAvg = role === 'pitcher'
         ? (skills.stuff.potential + skills.control.potential + skills.breaking.potential) / 3
         : (skills.contact.potential + skills.power.potential + skills.defense.potential) / 3;
 
-    const currentRating = isPitcher
-        ? (skills.stuff.current + skills.control.current + skills.breaking.current) / 3
-        : (skills.contact.current + skills.power.current + skills.defense.current) / 3;
+    let careerLength = 5 + Math.floor((potentialAvg / 80) * 12) + (Math.floor(Math.random() * 7) - 3);
+    careerLength = Math.max(3, Math.min(24, careerLength)); // Cap between 3 and 24 years
 
-    // Career Length: 10 to 20 years
-    const careerLength = Math.floor(Math.random() * 11) + 10;
-    const startAge = 20;
-    const peakAgeStart = 27;
-    const peakAgeEnd = 31;
+    const careerStats = [];
+    let currentPerformance = basePerformance;
 
-    let careerStats = [];
-    let careerTotals = isPitcher
-        ? { wins: 0, losses: 0, eraSum: 0, innings: 0, strikeouts: 0, saves: 0 }
-        : { avgSum: 0, hr: 0, rbi: 0, sb: 0, opsSum: 0, hits: 0, ab: 0 };
+    for (let i = 1; i <= careerLength; i++) {
+        let yearPerf = currentPerformance;
 
-    let awards = [];
+        // Age Curve
+        if (i <= 3) yearPerf *= (0.9 + (i * 0.05)); // 1: 0.95, 2: 1.0, 3: 1.05 (Growth)
+        else if (i > 12) yearPerf *= (1.0 - ((i - 12) * 0.05)); // Decline after year 12
 
-    for (let year = 1; year <= careerLength; year++) {
-        const age = startAge + year - 1;
+        // Random Event / Variance
+        const eventRoll = Math.random();
+        let eventLabel = null;
 
-        // Aging Curve Logic
-        let progress = 0;
-        let isDecline = false;
-        let declineAmount = 0;
-
-        if (age < peakAgeStart) {
-            // Growth phase
-            progress = (age - startAge) / (peakAgeStart - startAge);
-        } else if (age <= peakAgeEnd) {
-            // Peak phase
-            progress = 1;
+        if (eventRoll < 0.05) { // 5% Breakout
+            yearPerf *= 1.3;
+            eventLabel = "각성";
+        } else if (eventRoll < 0.10) { // 5% Slump/Injury
+            yearPerf *= 0.7;
+            eventLabel = "슬럼프";
         } else {
-            // Decline phase
-            isDecline = true;
-            declineAmount = (age - peakAgeEnd) * 2; // -2 per year
+            // Normal variance +/- 10%
+            yearPerf *= (0.9 + Math.random() * 0.2);
         }
 
-        const calculateSeasonValue = (current, potential) => {
-            let val = 0;
-            if (!isDecline) {
-                val = current + (potential - current) * progress;
-            } else {
-                val = Math.max(20, potential - declineAmount);
-            }
-            // Add small variance
-            return Math.floor(val + (Math.random() * 6 - 3));
+        // Performance Check for Early Retirement
+        // If performance drops too low for consecutive years, retire early?
+        if (i > 5 && yearPerf < 0.3) {
+            // Chance to retire
+            if (Math.random() > 0.5) break;
+        }
+
+        // Generate Stats based on yearPerf
+        if (role === 'pitcher') {
+            const era = Math.max(1.5, 5.5 - (yearPerf * 4.0)).toFixed(2); // Higher perf -> Lower ERA
+            const wins = Math.max(0, Math.floor(yearPerf * 22));
+            const losses = Math.max(0, Math.floor((1 - yearPerf) * 15));
+            const so = Math.floor(yearPerf * 250);
+            const innings = Math.floor(wins * 6 + losses * 5 + 50 + Math.random() * 30); // Rough estimation
+            careerStats.push({ year: i, age: 18 + i, rating: Math.floor(yearPerf * 100), era, wins, losses, strikeouts: so, innings, performance: yearPerf, event: eventLabel });
+        } else {
+            const avg = Math.min(0.350, Math.max(0.180, 0.200 + (yearPerf * 0.180))).toFixed(3);
+            const hr = Math.max(0, Math.floor(yearPerf * 55));
+            const rbi = Math.max(0, Math.floor(yearPerf * 140));
+            const sb = Math.max(0, Math.floor(yearPerf * 30 * (skills.speed ? skills.speed.current / 50 : 1))); // Use speed if avail, else default
+            const ops = (parseFloat(avg) + (hr * 0.015) + (yearPerf * 0.3)).toFixed(3); // Rough approximation
+            careerStats.push({ year: i, age: 18 + i, rating: Math.floor(yearPerf * 100), avg, hr, rbi, sb, ops, performance: yearPerf, event: eventLabel });
+        }
+    }
+
+    return careerStats;
+};
+
+export const simulateProCareer = (prospect) => {
+    const careerStats = calculateCareerStats(prospect);
+    const totalPerf = careerStats.reduce((sum, year) => sum + year.performance, 0);
+    const avgPerf = totalPerf / careerStats.length;
+    const yearsPlayed = careerStats.length;
+
+    // Determine Grade
+    let grade = "D";
+    if (avgPerf > 0.85 && yearsPlayed > 8) grade = "S";
+    else if (avgPerf > 0.70 && yearsPlayed > 5) grade = "A";
+    else if (avgPerf > 0.55 && yearsPlayed > 3) grade = "B";
+    else if (avgPerf > 0.40) grade = "C";
+
+    // Select Title and Description
+    const titles = CAREER_TITLES[grade];
+    const descriptions = CAREER_DESCRIPTIONS[grade];
+    const title = titles[Math.floor(Math.random() * titles.length)];
+    const description = descriptions[Math.floor(Math.random() * descriptions.length)];
+
+    // XP Reward
+    let xpReward = 500;
+    if (grade === "S") xpReward = 5000 + (yearsPlayed * 100);
+    else if (grade === "A") xpReward = 3000 + (yearsPlayed * 50);
+    else if (grade === "B") xpReward = 1500 + (yearsPlayed * 20);
+    else if (grade === "C") xpReward = 800;
+
+    // Generate Awards
+    const awards = [];
+    careerStats.forEach(stat => {
+        const yearStr = `(${stat.year}년차)`;
+
+        // Rookie of the Year (Year 1 only)
+        if (stat.year === 1 && stat.performance > 0.6) {
+            awards.push(`신인왕 ${yearStr}`);
+        }
+
+        // MVP (Very high threshold)
+        if (stat.performance > 0.92) {
+            awards.push(`MVP ${yearStr}`);
+        }
+
+        // All-Star (High threshold)
+        if (stat.performance > 0.75) {
+            awards.push(`올스타 ${yearStr}`);
+        }
+
+        // Position specific
+        if (prospect.position === 'Pitcher') {
+            if (stat.wins >= 18 || stat.era < 2.50) awards.push(`사이영상 ${yearStr}`);
+        } else {
+            if (stat.hr >= 40) awards.push(`홈런왕 ${yearStr}`);
+            if (stat.avg >= 0.330) awards.push(`타격왕 ${yearStr}`);
+            // Golden Glove check (using defense stat if available, but we only have performance here easily, let's cheat and use random + base defense if we can access it, or just random high perf)
+            // Let's assume high performance implies good play, add random chance for GG if perf is decent
+            if (stat.performance > 0.6 && Math.random() > 0.8) awards.push(`골든글러브 ${yearStr}`);
+        }
+    });
+
+    // Calculate Career Totals
+    let careerTotals = {};
+    if (prospect.position === 'Pitcher') {
+        const totalWins = careerStats.reduce((sum, s) => sum + s.wins, 0);
+        const totalLosses = careerStats.reduce((sum, s) => sum + s.losses, 0);
+        const totalInnings = careerStats.reduce((sum, s) => sum + s.innings, 0);
+        const totalSO = careerStats.reduce((sum, s) => sum + s.strikeouts, 0);
+        // Weighted ERA? Or just simple avg for simplicity
+        const avgEra = (careerStats.reduce((sum, s) => sum + parseFloat(s.era), 0) / yearsPlayed).toFixed(2);
+
+        careerTotals = {
+            wins: totalWins,
+            losses: totalLosses,
+            innings: totalInnings,
+            strikeouts: totalSO,
+            era: avgEra
         };
-
-        // Calculate Detailed Stats Snapshot
-        let seasonDetails = {};
-        if (isPitcher) {
-            seasonDetails = {
-                mph: calculateSeasonValue(skills.mph.current, skills.mph.potential),
-                stuff: calculateSeasonValue(skills.stuff.current, skills.stuff.potential),
-                control: calculateSeasonValue(skills.control.current, skills.control.potential),
-                breaking: calculateSeasonValue(skills.breaking.current, skills.breaking.potential)
-            };
-        } else {
-            seasonDetails = {
-                contact: calculateSeasonValue(skills.contact.current, skills.contact.potential),
-                power: calculateSeasonValue(skills.power.current, skills.power.potential),
-                defense: calculateSeasonValue(skills.defense.current, skills.defense.potential)
-            };
-        }
-
-        // Calculate Overall Ability Factor from details
-        let abilityFactor = 0;
-        if (isPitcher) {
-            abilityFactor = (seasonDetails.stuff + seasonDetails.control + seasonDetails.breaking) / 3;
-        } else {
-            abilityFactor = (seasonDetails.contact + seasonDetails.power + seasonDetails.defense) / 3;
-        }
-
-        // Add Random Variance for the season performance (separate from attribute variance)
-        const seasonRating = abilityFactor + (Math.floor(Math.random() * 6) - 3);
-        const displayRating = Math.floor(seasonRating);
-
-        // Bench Warmer / Minor League Logic
-        // If rating < 35, they get limited playing time and reduced stats
-        const isBenchWarmer = seasonRating < 35;
-
-        let seasonStat = {};
-
-        if (isPitcher) {
-            // ERA: Lower is better. 80 rating -> ~2.00, 20 rating -> ~6.00
-            // Formula: 7.5 - (rating / 15)
-            let era = Math.max(1.5, 7.5 - (seasonRating / 13));
-            era += (Math.random() * 1 - 0.5); // Variance
-
-            // Penalty for low rating
-            if (isBenchWarmer) era += (Math.random() * 2 + 1); // Add 1.00-3.00 to ERA
-
-            // Wins: Rating * 0.25 -> Tuned to 0.22
-            let wins = Math.floor(seasonRating * 0.22 + (Math.random() * 5 - 2));
-            if (isBenchWarmer) wins = Math.max(0, Math.floor(Math.random() * 3)); // 0-2 wins max
-            wins = Math.max(0, wins);
-
-            // Losses: Inverse of wins roughly
-            let losses = Math.floor((100 - seasonRating) * 0.15 + (Math.random() * 5 - 2));
-            if (isBenchWarmer) losses = Math.max(0, Math.floor(Math.random() * 3)); // Low losses too since low innings
-            losses = Math.max(0, losses);
-
-            // Innings: Rating * 2.5
-            let innings = Math.floor(seasonRating * 2.5 + (Math.random() * 20 - 10));
-            if (isBenchWarmer) innings = Math.floor(Math.random() * 30) + 10; // 10-40 IP
-
-            // Strikeouts: Rating * 2.2
-            let strikeouts = Math.floor(seasonRating * 2.2 + (Math.random() * 20 - 10));
-            if (isBenchWarmer) strikeouts = Math.floor(innings * 0.6); // Low K rate
-
-            seasonStat = {
-                year: year,
-                age: age,
-                rating: displayRating,
-                details: seasonDetails,
-                wins: wins,
-                losses: losses,
-                era: era.toFixed(2),
-                innings: innings,
-                strikeouts: strikeouts
-            };
-
-            careerTotals.wins += wins;
-            careerTotals.losses += losses;
-            careerTotals.eraSum += era; // For avg calculation later
-            careerTotals.innings += innings;
-            careerTotals.strikeouts += strikeouts;
-
-            // Awards Logic (Harder thresholds)
-            if (wins >= 18 && era < 2.50) awards.push(`Year ${year} MVP`);
-            else if (wins >= 16 && era < 2.80) awards.push(`Year ${year} Cy Young`);
-            if (year === 1 && wins >= 10 && era < 3.50) awards.push(`Rookie of the Year`);
-
-        } else {
-            // Batter
-            // AVG: 20 -> .200, 80 -> .350
-            // Formula: 0.150 + (rating / 400)
-            let avg = 0.180 + (seasonRating / 350);
-            avg += (Math.random() * 0.04 - 0.02);
-            if (isBenchWarmer) avg -= (Math.random() * 0.05); // Penalty
-
-            // HR: Rating * 0.6 -> Tuned to 0.5
-            let hr = Math.floor(seasonRating * 0.5 + (Math.random() * 10 - 5));
-            if (isBenchWarmer) hr = Math.max(0, Math.floor(Math.random() * 5)); // 0-4 HR
-            hr = Math.max(0, hr);
-
-            // RBI: HR * 2.5 + (Rating * 0.5)
-            let rbi = Math.floor(hr * 2.5 + seasonRating * 0.5 + (Math.random() * 20 - 10));
-            if (isBenchWarmer) rbi = Math.floor(hr * 2 + Math.random() * 10);
-
-            // SB: Speed based
-            let sb = Math.floor(seasonRating * 0.3 + (Math.random() * 10 - 5));
-            sb = Math.max(0, sb);
-
-            // OPS: AVG + SLG (approx)
-            let ops = avg + (hr * 0.015) + 0.300;
-
-            // AB Adjustment
-            let ab = 500;
-            if (isBenchWarmer) ab = Math.floor(Math.random() * 100) + 50; // 50-150 AB
-
-            seasonStat = {
-                year: year,
-                age: age,
-                rating: displayRating,
-                details: seasonDetails,
-                avg: avg.toFixed(3),
-                hr: hr,
-                rbi: rbi,
-                sb: sb,
-                ops: ops.toFixed(3)
-            };
-
-            careerTotals.avgSum += avg;
-            careerTotals.hr += hr;
-            careerTotals.rbi += rbi;
-            careerTotals.sb += sb;
-            careerTotals.opsSum += ops;
-            careerTotals.hits += Math.floor(avg * ab);
-            careerTotals.ab += ab;
-
-            // Awards Logic
-            if (hr >= 45 || avg >= 0.340) awards.push(`Year ${year} MVP`);
-            else if (hr >= 35 || avg >= 0.320) awards.push(`Year ${year} Golden Glove`);
-            if (year === 1 && (hr >= 20 || avg >= 0.290)) awards.push(`Rookie of the Year`);
-        }
-
-        careerStats.push(seasonStat);
-    }
-
-    // Finalize Totals
-    if (isPitcher) {
-        careerTotals.era = (careerTotals.eraSum / careerLength).toFixed(2);
     } else {
-        // Weighted Average for Career AVG/OPS based on AB would be better, but simple avg for now
-        // Or recalculate from hits/ab
-        careerTotals.avg = (careerTotals.hits / careerTotals.ab).toFixed(3);
-        careerTotals.ops = (careerTotals.opsSum / careerLength).toFixed(3);
-    }
+        const totalHr = careerStats.reduce((sum, s) => sum + s.hr, 0);
+        const totalRbi = careerStats.reduce((sum, s) => sum + s.rbi, 0);
+        const totalSb = careerStats.reduce((sum, s) => sum + s.sb, 0);
+        const avgAvg = (careerStats.reduce((sum, s) => sum + parseFloat(s.avg), 0) / yearsPlayed).toFixed(3);
+        const avgOps = (careerStats.reduce((sum, s) => sum + parseFloat(s.ops), 0) / yearsPlayed).toFixed(3);
 
-    // Calculate XP Reward
-    // Base 1000 + 1000 per award
-    const xpReward = 1000 + (awards.length * 1000);
+        careerTotals = {
+            hr: totalHr,
+            rbi: totalRbi,
+            sb: totalSb,
+            avg: avgAvg,
+            ops: avgOps
+        };
+    }
 
     return {
+        title,
+        description,
+        grade,
         careerStats,
         careerTotals,
         awards,
-        xpReward,
-        summary: `Played ${careerLength} seasons. ${isPitcher ? `Wins: ${careerTotals.wins}, SO: ${careerTotals.strikeouts}` : `HR: ${careerTotals.hr}, AVG: ${careerTotals.avg}`}`
+        xpReward
     };
 };

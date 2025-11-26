@@ -176,25 +176,6 @@
     /* Readable Font */
     font-size: 1rem;
     background: rgba(0, 0, 0, 0.8);
-    border: 2px solid #fff;
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.1s;
-}
-
-50% {
-    transform: scale(1.1);
-}
-
-100% {
-    transform: scale(1);
-}
-}
-
-/* Review Screen Styles */
-.review-screen {
-    max-height: 80vh;
-    display: flex;
     flex-direction: column;
 }
 

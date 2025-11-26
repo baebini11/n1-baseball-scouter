@@ -7,10 +7,18 @@ const ReviewPage = ({ globalWrongAnswers, removeFromGlobalReview }) => {
     return (
         <div className="page-container">
             <button className="home-btn" onClick={() => navigate('/')}>🏠 HOME</button>
-            <div className="review-box-container">
+            <div className="review-box-container" style={{ marginTop: '60px' }}>
                 <h2>REVIEW BOX ({globalWrongAnswers.length})</h2>
                 {globalWrongAnswers.length === 0 ? <p>No items to review.</p> : (
-                    <div className="review-list">
+                    <div className="review-list" style={{
+                        maxHeight: '70vh',
+                        overflowY: 'auto',
+                        padding: '10px',
+                        border: '2px solid #555',
+                        background: 'rgba(0,0,0,0.5)',
+                        scrollbarWidth: 'thin',
+                        scrollbarColor: '#ff0055 #222'
+                    }}>
                         {globalWrongAnswers.map((item, idx) => (
                             <div key={idx} className="review-card">
                                 <div className="review-question">

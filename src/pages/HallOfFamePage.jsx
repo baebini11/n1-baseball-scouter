@@ -34,11 +34,9 @@ const HallOfFamePage = () => {
     };
 
     return (
-        <div className="hall-of-fame-page" style={{ padding: '20px', color: '#fff', minHeight: '100vh', background: '#111' }}>
+        <div className="page-container hall-of-fame-page" style={{ color: '#fff', background: '#111' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <button onClick={() => navigate('/')} style={{ padding: '10px 20px', background: '#444', color: '#fff', border: 'none', cursor: 'pointer' }}>
-                    BACK TO HOME
-                </button>
+                <button className="home-btn" onClick={() => navigate('/')}>🏠 HOME</button>
                 <h1 style={{ color: '#ffd700', textShadow: '0 0 10px #ffd700' }}>HALL OF FAME</h1>
                 <div style={{ width: '100px' }}></div> {/* Spacer */}
             </div>
@@ -180,19 +178,19 @@ const HallOfFamePage = () => {
                                                 <td style={{ padding: '8px' }} colSpan="3">TOTALS</td>
                                                 {selectedPlayer.position === 'Pitcher' ? (
                                                     <>
-                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals.wins}</td>
-                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals.losses}</td>
-                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals.era}</td>
-                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals.innings}</td>
-                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals.strikeouts}</td>
+                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals?.wins || 0}</td>
+                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals?.losses || 0}</td>
+                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals?.era || '-'}</td>
+                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals?.innings || 0}</td>
+                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals?.strikeouts || 0}</td>
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals.avg}</td>
-                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals.hr}</td>
-                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals.rbi}</td>
-                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals.sb}</td>
-                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals.ops}</td>
+                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals?.avg || '-'}</td>
+                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals?.hr || 0}</td>
+                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals?.rbi || 0}</td>
+                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals?.sb || 0}</td>
+                                                        <td style={{ padding: '8px', textAlign: 'right' }}>{selectedPlayer.career.careerTotals?.ops || '-'}</td>
                                                     </>
                                                 )}
                                             </tr>

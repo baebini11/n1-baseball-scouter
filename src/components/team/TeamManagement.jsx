@@ -274,22 +274,43 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
             </div>
 
             {/* Main Tabs */}
-            <div className="tabs" style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
+            <div className="tabs" style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
                 <button
                     onClick={() => { setMainTab('trainees'); setSelectedPlayer(null); }}
-                    style={{ background: mainTab === 'trainees' ? '#ffd700' : '#333', color: mainTab === 'trainees' ? '#000' : '#fff' }}
+                    style={{
+                        background: mainTab === 'trainees' ? '#ffd700' : '#333',
+                        color: mainTab === 'trainees' ? '#000' : '#fff',
+                        flex: '1 1 auto',
+                        padding: '10px',
+                        fontSize: '0.8em',
+                        minWidth: '120px'
+                    }}
                 >
                     TRAINEES ({trainees.length})
                 </button>
                 <button
                     onClick={() => { setMainTab('graduates'); setSelectedPlayer(null); }}
-                    style={{ background: mainTab === 'graduates' ? '#00ffff' : '#333', color: mainTab === 'graduates' ? '#000' : '#fff' }}
+                    style={{
+                        background: mainTab === 'graduates' ? '#00ffff' : '#333',
+                        color: mainTab === 'graduates' ? '#000' : '#fff',
+                        flex: '1 1 auto',
+                        padding: '10px',
+                        fontSize: '0.8em',
+                        minWidth: '120px'
+                    }}
                 >
                     GRADUATES ({graduates.length})
                 </button>
                 <button
                     onClick={() => { setMainTab('my_team'); setSelectedPlayer(null); }}
-                    style={{ background: mainTab === 'my_team' ? '#39ff14' : '#333', color: mainTab === 'my_team' ? '#000' : '#fff' }}
+                    style={{
+                        background: mainTab === 'my_team' ? '#39ff14' : '#333',
+                        color: mainTab === 'my_team' ? '#000' : '#fff',
+                        flex: '1 1 auto',
+                        padding: '10px',
+                        fontSize: '0.8em',
+                        minWidth: '120px'
+                    }}
                 >
                     MY TEAM ({myTeam.length})
                 </button>
@@ -336,22 +357,73 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                         const glowIntensity = growthRatio * 20; // Max 20px blur
                         const glowOpacity = 0.2 + (growthRatio * 0.6); // 0.2 to 0.8 opacity
 
+                        const getAvgStats = (prospect) => {
+                            if (prospect.baseballSkills) {
+                                const role = prospect.position === 'Pitcher' ? 'pitcher' : 'fielder';
+                                const skills = prospect.baseballSkills[role];
+                                const currentSum = role === 'pitcher'
+                                    ? skills.stuff.current + skills.control.current + skills.breaking.current
+                                    : skills.contact.current + skills.power.current + skills.defense.current;
+                                const potentialSum = role === 'pitcher'
+                                    ? skills.stuff.potential + skills.control.potential + skills.breaking.potential
+                                    : skills.contact.potential + skills.power.potential + skills.defense.potential;
+                                return { current: currentSum / 3, potential: potentialSum / 3 };
+                            } else {
+                                const stats = Object.values(prospect.stats);
+                                const currentSum = stats.reduce((sum, s) => sum + s.current, 0);
+                                const potentialSum = stats.reduce((sum, s) => sum + s.potential, 0);
+                                return { current: currentSum / stats.length, potential: potentialSum / stats.length };
+                            }
+                        };
+
+                        const avgStats = getAvgStats(p);
+                        const currentRank = getStatRank(avgStats.current);
+                        const potentialRank = getStatRank(avgStats.potential);
+
                         return (
                             <div key={p.id} className="card-item" onClick={() => {
                                 setSelectedPlayer(p);
-                                setActiveTab(mainTab === 'trainees' ? 'training' : 'roster'); // Default tab based on main tab
+                                setActiveTab(mainTab === 'trainees' ? 'training' : 'roster');
                             }} style={{
                                 borderColor: p.rarity.color,
                                 borderWidth: '3px',
-                                // Dynamic Glow Effect
-                                boxShadow: `0 0 ${glowIntensity}px ${p.rarity.color}${Math.floor(glowOpacity * 255).toString(16).padStart(2, '0')}`
+                                boxShadow: `0 0 ${glowIntensity}px ${p.rarity.color}${Math.floor(glowOpacity * 255).toString(16).padStart(2, '0')}`,
+                                position: 'relative'
                             }}>
                                 <div className="card-type" style={{ background: p.rarity.color, color: '#000' }}>{p.rarity.label}</div>
                                 <h3>{p.name}</h3>
-                                <p>Pos: {p.position || "Trainee"}</p>
+
+                                {/* Trait Badge */}
+                                {p.trait && (
+                                    <div className="trait-badge" title={p.trait.desc} style={{
+                                        background: '#333', color: '#fff', padding: '2px 6px', borderRadius: '4px',
+                                        fontSize: '0.7em', display: 'inline-block', marginBottom: '5px', border: '1px solid #555'
+                                    }}>
+                                        {p.trait.label}
+                                    </div>
+                                )}
+
+                                {/* Stats / Info */}
+                                <div style={{ fontSize: '0.9em', marginTop: '5px' }}>
+                                    {p.position ? (
+                                        // My Player / Graduate
+                                        <>
+                                            <div style={{ color: '#aaa' }}>{p.position}</div>
+                                            <div style={{ marginTop: '5px' }}>
+                                                Rank: <span style={{ color: currentRank.color, fontWeight: 'bold' }}>{currentRank.rank}</span>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        // Trainee
+                                        <div style={{ marginTop: '5px' }}>
+                                            Pot: <span style={{ color: currentRank.color }}>{currentRank.rank}</span> / <span style={{ color: potentialRank.color }}>{potentialRank.rank}</span>
+                                        </div>
+                                    )}
+                                </div>
+
                                 {/* Mini Stat Bar for Overall Potential */}
                                 <div style={{ marginTop: '10px', height: '4px', background: '#333', borderRadius: '2px', overflow: 'hidden' }}>
-                                    <div style={{ width: `${(p.stats.power.potential / 80) * 100}%`, height: '100%', background: p.rarity.color }}></div>
+                                    <div style={{ width: `${(avgStats.potential / 80) * 100}%`, height: '100%', background: p.rarity.color }}></div>
                                 </div>
                             </div>
                         );

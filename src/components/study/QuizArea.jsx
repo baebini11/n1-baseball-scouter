@@ -156,7 +156,7 @@ const QuizArea = ({ words, grammar, addToGlobalReview, globalWrongAnswers }) => 
 
     return (
         <div className="quiz-area">
-            <div className="quiz-header-sticky">
+            <div className={quizState === 'playing' ? "quiz-header-sticky" : "quiz-header"}>
                 <div className="score-display">
                     {quizState === 'result' ?
                         `Score: ${score}` :

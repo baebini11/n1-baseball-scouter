@@ -45,26 +45,6 @@
     cursor: pointer;
     transition: transform 0.1s;
     margin-top: 20px;
-}
-
-.pull-button:active {
-    transform: scale(0.95);
-}
-
-background: #ff0055;
-color: white;
-padding: 10px;
-border-radius: 50%;
-transform: rotate(15deg);
-border: 2px solid white;
-animation: pulse 1s infinite;
-}
-
-.close-reveal-btn {
-    margin-top: 20px;
-    background: transparent;
-    border: 2px solid #fff;
-    color: #fff;
     padding: 10px 20px;
     font-family: 'Press Start 2P', cursive;
     cursor: pointer;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom'; // Import ReactDOM for createPortal
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { onAuthStateChanged, signOut } from 'firebase/auth'; // Import signOut
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -16,6 +17,17 @@ import ScoutPage from './pages/ScoutPage';
 import TeamPage from './pages/TeamPage';
 import ReviewPage from './pages/ReviewPage';
 import HallOfFamePage from './pages/HallOfFamePage';
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 import WordTicker from './components/common/WordTicker';
 import joyoKanji from './data/joyo_kanji.json';
 import jlptN1Grammar from './data/jlpt_n1_grammar.json';
@@ -23,7 +35,7 @@ import './App.css';
 
 const RefreshButton = ({ onRefresh, isRefreshing }) => {
   const location = useLocation();
-  if (location.pathname === '/game') return null;
+  if (location.pathname !== '/') return null;
 
   return (
     <button
@@ -32,7 +44,7 @@ const RefreshButton = ({ onRefresh, isRefreshing }) => {
       style={{
         position: 'absolute',
         top: '20px',
-        left: '50%',
+        left: '10%',
         transform: 'translateX(-50%)',
         zIndex: 1000,
         background: 'rgba(0, 0, 0, 0.7)',
@@ -102,6 +114,21 @@ function App() {
 
     return () => unsubscribe();
   }, [dispatch]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (location.pathname !== '/') {
+        e.preventDefault();
+        e.returnValue = ''; // Chrome requires returnValue to be set
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     try {
@@ -244,6 +271,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="app-container">
         {user && <RefreshButton onRefresh={handleRefresh} isRefreshing={isRefreshing} />}
         {pipWindow ? (

@@ -17,13 +17,14 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
 
     // Boss Mode: 10 questions at Level 1, +1 per level (Reduced scaling)
     const bossQuestionsCount = 10 + (level - 1) * 1;
+    const bossCost = 100 + (level - 1) * 50;
     const totalQuestions = mode === 'boss' ? bossQuestionsCount : 20;
     const timeLimit = mode === 'boss' ? 3 : 5;
 
     useEffect(() => {
         if (gameState === 'playing' || gameState === 'boss_playing') {
             if (timeLeft > 0) {
-                timerRef.current = setTimeout(() => setTimeLeft(prev => prev - 1), 1000);
+                timerRef.current = setTimeout(() => setTimeLeft(prev => Math.max(0, prev - 0.1)), 100);
             } else {
                 handleTimeOut();
             }
@@ -57,11 +58,25 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
             return;
         }
 
-        // Mix words and grammar
-        const isWord = Math.random() > 0.5;
-        const source = isWord ? words : grammar;
-        if (!source || source.length === 0) return;
+        // Check availability
+        const hasWords = words && words.length > 0;
+        const hasGrammar = grammar && grammar.length > 0;
 
+        if (!hasWords && !hasGrammar) {
+            alert("No data available for the game!");
+            setGameState('menu');
+            return;
+        }
+
+        // Mix words and grammar
+        let isWord;
+        if (hasWords && hasGrammar) {
+            isWord = Math.random() > 0.5;
+        } else {
+            isWord = hasWords; // If only words, true. If only grammar, false.
+        }
+
+        const source = isWord ? words : grammar;
         const item = source[Math.floor(Math.random() * source.length)];
 
         let questionText, correct, distractors;
@@ -226,7 +241,7 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
         setGameState('result');
     };
 
-    const canChallengeBoss = xp >= 100;
+    const canChallengeBoss = xp >= bossCost;
 
     return (
         <div className="reaction-game" style={{ height: 'calc(100vh - 80px)' }}>
@@ -235,11 +250,11 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
                     <h1 className="game-title">⚡ REACTION TEST ⚡</h1>
                     <div className="stats-display">
                         <div>LEVEL: {level}</div>
-                        <div>XP: {xp} / 100</div>
+                        <div>XP: {xp} / {bossCost}</div>
                     </div>
 
                     <div className="xp-bar-container">
-                        <div className="xp-bar" style={{ width: `${Math.min(xp, 100)}%` }}></div>
+                        <div className="xp-bar" style={{ width: `${Math.min((xp / bossCost) * 100, 100)}%` }}></div>
                     </div>
 
                     <button className="menu-btn normal" onClick={() => startGame('normal')}>
@@ -254,10 +269,10 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
                     >
                         BOSS BATTLE <br />
                         <span className="btn-sub">
-                            {canChallengeBoss ? "CLICK TO START!" : `Need ${100 - xp} more XP`}
+                            {canChallengeBoss ? "CLICK TO START!" : `Need ${bossCost - xp} more XP`}
                         </span>
                         <div style={{ fontSize: '0.6em', marginTop: '5px', color: '#ff0055' }}>
-                            {bossQuestionsCount} Questions / 3s
+                            {bossQuestionsCount} Questions / 3s / Cost: {bossCost}XP
                         </div>
                     </button>
 
@@ -268,11 +283,27 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
             {(gameState === 'playing' || gameState === 'boss_playing') && currentQuestion && (
                 <div className={`game-interface ${mode}`}>
                     <div className="game-header">
-                        <div className="timer-bar" style={{ width: `${(timeLeft / timeLimit) * 100}%` }}></div>
+                        <div className="timer-bar" style={{ width: `${(timeLeft / timeLimit) * 100}%`, transition: 'width 0.1s linear' }}></div>
                         <div className="game-info">
                             <span>Q: {questionCount} / {totalQuestions}</span>
                             <span>COMBO: {combo}</span>
                         </div>
+                        <button
+                            className="back-btn-small"
+                            onClick={() => setGameState('menu')}
+                            style={{
+                                marginTop: '10px',
+                                background: 'transparent',
+                                border: '1px solid #555',
+                                color: '#aaa',
+                                padding: '5px 10px',
+                                cursor: 'pointer',
+                                fontSize: '0.8em',
+                                fontFamily: 'Press Start 2P'
+                            }}
+                        >
+                            EXIT TO MENU
+                        </button>
                     </div>
 
                     <div className="question-display">
@@ -322,7 +353,7 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
 
                     <button className="menu-btn" onClick={() => {
                         if (mode === 'boss' && questionCount === bossQuestionsCount) {
-                            setXp(prev => Math.max(0, prev - 100)); // Deduct cost
+                            setXp(prev => Math.max(0, prev - bossCost)); // Deduct cost
                         }
                         setGameState('menu');
                     }}>CONTINUE</button>
@@ -332,7 +363,16 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
             {gameState === 'result' && showReview && (
                 <div className="review-screen">
                     <h2>REVIEW MISTAKES</h2>
-                    <div className="review-list-container">
+                    <div className="review-list-container" style={{
+                        maxHeight: '60vh',
+                        overflowY: 'auto',
+                        padding: '10px',
+                        border: '2px solid #555',
+                        background: 'rgba(0,0,0,0.8)',
+                        scrollbarWidth: 'thin',
+                        scrollbarColor: '#ff0055 #222',
+                        marginBottom: '20px'
+                    }}>
                         {wrongQuestions.map((q, idx) => (
                             <div key={idx} className="review-item">
                                 <div className="review-q-text">{q.text}</div>
