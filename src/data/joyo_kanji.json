@@ -449,7 +449,7 @@
       "まど.か",
       "まろ.やか"
     ],
-    "meaning": "Circle, Yen, Round"
+    "meaning": "원, 엔화, 둥근"
   },
   {
     "id": "j34",
@@ -816,7 +816,7 @@
     "kunyomi": [
       "うち"
     ],
-    "meaning": "Inside, Within, Between, Among, House, Home"
+    "meaning": "안, 내부, 사이, 집"
   },
   {
     "id": "j62",
@@ -939,7 +939,7 @@
     "kunyomi": [
       "と"
     ],
-    "meaning": "Door, Counter For Houses, Door Radical (no. 63)"
+    "meaning": "문, 호(집 단위)"
   },
   {
     "id": "j71",
@@ -1231,7 +1231,7 @@
       "うつ-",
       "うつ.し"
     ],
-    "meaning": "Copy, Be Photographed, Describe"
+    "meaning": "베끼다, 사진 찍다, 묘사하다"
   },
   {
     "id": "j93",
@@ -1444,7 +1444,7 @@
     "kunyomi": [
       "いき"
     ],
-    "meaning": "Spirit, Mind, Air, Atmosphere, Mood"
+    "meaning": "정신, 마음, 공기, 분위기"
   },
   {
     "id": "j110",
@@ -1741,7 +1741,7 @@
       "まさ.に",
       "まさ.にべし"
     ],
-    "meaning": "Hit, Right, Appropriate, Himself"
+    "meaning": "치다, 맞다, 적절한, 자신"
   },
   {
     "id": "j133",
@@ -1753,7 +1753,7 @@
       "ごと",
       "-ごと.に"
     ],
-    "meaning": "Every"
+    "meaning": "매번, 모든"
   },
   {
     "id": "j134",
@@ -1791,7 +1791,7 @@
       "わ",
       "はね"
     ],
-    "meaning": "Feathers, Counter For Birds, Rabbits"
+    "meaning": "깃털, 날개, 우(새·토끼 단위)"
   },
   {
     "id": "j137",
@@ -1927,7 +1927,7 @@
       "え",
       "はか.る"
     ],
-    "meaning": "Map, Drawing, Plan, Extraordinary, Audacious"
+    "meaning": "지도, 그림, 계획, 비범한"
   },
   {
     "id": "j147",
@@ -1940,7 +1940,7 @@
       "こえ",
       "こわ-"
     ],
-    "meaning": "Voice"
+    "meaning": "목소리"
   },
   {
     "id": "j148",
@@ -1952,7 +1952,7 @@
       "う.る",
       "う.れる"
     ],
-    "meaning": "Sell"
+    "meaning": "팔다"
   },
   {
     "id": "j149",
@@ -2091,7 +2091,7 @@
     "kunyomi": [
       "むぎ"
     ],
-    "meaning": "Barley, Wheat"
+    "meaning": "보리, 밀"
   },
   {
     "id": "j160",
@@ -2146,7 +2146,7 @@
       "かな-",
       "-がね"
     ],
-    "meaning": "Gold"
+    "meaning": "금"
   },
   {
     "id": "j164",
@@ -2237,7 +2237,7 @@
       "てる",
       "ふたつ"
     ],
-    "meaning": "Both, Old Japanese Coin, Counter For Carriages (e.g., In A Train), Two"
+    "meaning": "양쪽, 둘, 냥(화폐)"
   },
   {
     "id": "j171",
@@ -2504,7 +2504,7 @@
       "はかりごと",
       "はか.る"
     ],
-    "meaning": "Brush-stroke, Picture"
+    "meaning": "획, 그림"
   },
   {
     "id": "j191",
@@ -2783,7 +2783,7 @@
       "ほと.り",
       "-べ"
     ],
-    "meaning": "Environs, Boundary, Border, Vicinity"
+    "meaning": "경계, 국경, 부근"
   },
   {
     "id": "j213",
@@ -3108,7 +3108,7 @@
       "き",
       "こ-"
     ],
-    "meaning": "Yellow"
+    "meaning": "노란색"
   },
   {
     "id": "j238",
@@ -3121,7 +3121,7 @@
       "くろ.ずむ",
       "くろ.い"
     ],
-    "meaning": "Black"
+    "meaning": "검은색"
   },
   {
     "id": "j239",
@@ -3205,7 +3205,7 @@
       "なら.ぶ",
       "むか.う"
     ],
-    "meaning": "Vis-a-vis, Opposite, Even, Equal, Versus, Anti-, Compare"
+    "meaning": "대(對), 반대, 대등한"
   },
   {
     "id": "j245",
@@ -3297,7 +3297,7 @@
     "kunyomi": [
       "と.ぐ"
     ],
-    "meaning": "Polish, Study Of, Sharpen"
+    "meaning": "갈다, 연구, 연마"
   },
   {
     "id": "j253",
@@ -3446,7 +3446,7 @@
       "せ.める",
       "わずらわ.しい"
     ],
-    "meaning": "Number, Strength, Fate, Law, Figures"
+    "meaning": "수, 힘, 운명, 법칙"
   },
   {
     "id": "j265",
@@ -3461,7 +3461,7 @@
       "たの.しむ",
       "この.む"
     ],
-    "meaning": "Music, Comfort, Ease"
+    "meaning": "음악, 편안함"
   },
   {
     "id": "j266",
@@ -3698,7 +3698,7 @@
       "-の.り",
       "の.せる"
     ],
-    "meaning": "Ride, Power, Multiplication, Record, Counter For Vehicles, Board, Mount, Join"
+    "meaning": "타다, 곱셈, 기록, 승"
   },
   {
     "id": "j284",
@@ -3783,7 +3783,7 @@
       "つか.わす",
       "はな.つ"
     ],
-    "meaning": "Departure, Discharge, Publish, Emit, Start From, Disclose, Counter For Gunshots"
+    "meaning": "출발, 발사, 발표"
   },
   {
     "id": "j291",
@@ -3806,7 +3806,7 @@
     "kunyomi": [
       "か.ける"
     ],
-    "meaning": "Prefecture"
+    "meaning": "현(행정구역)"
   },
   {
     "id": "j293",
@@ -3909,7 +3909,7 @@
       "かり",
       "かり-"
     ],
-    "meaning": "Sham, Temporary, Interim, Assumed (name), Informal"
+    "meaning": "가짜, 임시, 가명"
   },
   {
     "id": "j301",
@@ -4017,7 +4017,7 @@
       "うつ.る",
       "くる.めく"
     ],
-    "meaning": "Revolve, Turn Around, Change"
+    "meaning": "회전하다, 변화"
   },
   {
     "id": "j309",
@@ -4068,7 +4068,7 @@
       "かろ.やか",
       "かろ.んじる"
     ],
-    "meaning": "Lightly, Trifling, Unimportant"
+    "meaning": "가볍게, 사소한"
   },
   {
     "id": "j313",
@@ -4121,7 +4121,7 @@
       "の.む",
       "-の.み"
     ],
-    "meaning": "Drink, Smoke, Take"
+    "meaning": "마시다, 피우다"
   },
   {
     "id": "j317",
@@ -4237,7 +4237,7 @@
       "よ.む",
       "-よ.み"
     ],
-    "meaning": "Read"
+    "meaning": "읽다"
   },
   {
     "id": "j327",
@@ -4272,7 +4272,7 @@
     "kunyomi": [
       "よこ"
     ],
-    "meaning": "Sideways, Side, Horizontal, Width, Woof, Unreasonable, Perverse"
+    "meaning": "옆, 가로, 무리한"
   },
   {
     "id": "j330",
@@ -4366,7 +4366,7 @@
       "あらそ.う",
       "いか.でか"
     ],
-    "meaning": "Contend, Dispute, Argue"
+    "meaning": "다투다, 논쟁"
   },
   {
     "id": "j337",
@@ -4394,7 +4394,7 @@
       "-づた.い",
       "つて"
     ],
-    "meaning": "Transmit, Go Along, Walk Along, Follow, Report, Communicate, Legend, Tradition"
+    "meaning": "전하다, 전달, 전설"
   },
   {
     "id": "j339",
@@ -4539,7 +4539,7 @@
       "つか.れる",
       "ねぎら.う"
     ],
-    "meaning": "Labor, Thank For, Reward For, Toil, Trouble"
+    "meaning": "노동, 수고"
   },
   {
     "id": "j350",
@@ -4720,7 +4720,7 @@
       "そよ.ぐ",
       "わなな.く"
     ],
-    "meaning": "War, Battle, Match"
+    "meaning": "전쟁, 싸움"
   },
   {
     "id": "j365",
@@ -4792,7 +4792,7 @@
     "kunyomi": [
       "はたら.く"
     ],
-    "meaning": "Work, (kokuji)"
+    "meaning": "일하다, 노동"
   },
   {
     "id": "j371",
@@ -5021,7 +5021,7 @@
       "いずくんぞ",
       "にく.む"
     ],
-    "meaning": "Bad, Vice, Rascal, False, Evil, Wrong"
+    "meaning": "나쁜, 악"
   },
   {
     "id": "j391",
@@ -5123,7 +5123,7 @@
     "kunyomi": [
       "あつ.い"
     ],
-    "meaning": "Sultry, Hot, Summer Heat"
+    "meaning": "무더운, 여름 더위"
   },
   {
     "id": "j400",
@@ -5159,7 +5159,7 @@
       "よわ.い",
       "よわい.する"
     ],
-    "meaning": "Tooth, Cog"
+    "meaning": "이, 톱니"
   },
   {
     "id": "j403",
@@ -5174,7 +5174,7 @@
       "あたた.める",
       "ぬく"
     ],
-    "meaning": "Warm"
+    "meaning": "따뜻한"
   },
   {
     "id": "j404",
@@ -5487,7 +5487,7 @@
       "さま",
       "さん"
     ],
-    "meaning": "Esq., Way, Manner, Situation, Polite Suffix"
+    "meaning": "양(존칭), 방법"
   },
   {
     "id": "j426",
@@ -5519,7 +5519,7 @@
     "kunyomi": [
       "みどり"
     ],
-    "meaning": "Green"
+    "meaning": "초록색"
   },
   {
     "id": "j429",
@@ -5574,7 +5574,7 @@
       "やかた",
       "たて"
     ],
-    "meaning": "Building, Mansion, Large Building, Palace"
+    "meaning": "건물, 궁전"
   },
   {
     "id": "j434",
@@ -5583,7 +5583,7 @@
       "えき"
     ],
     "kunyomi": [],
-    "meaning": "Station"
+    "meaning": "역"
   },
   {
     "id": "j435",
@@ -5874,7 +5874,7 @@
       "まじわる",
       "みつ"
     ],
-    "meaning": "Nonplussed, Three (in Documents), Going, Coming, Visiting, Visit, Be Defeated, Die, Be Madly In Love, Participate, Take Part In"
+    "meaning": "참가, 방문, 삼(문서)"
   },
   {
     "id": "j460",
@@ -5898,7 +5898,7 @@
       "かこ.う",
       "かこ.い"
     ],
-    "meaning": "Surround, Besiege, Store, Paling, Enclosure, Encircle, Preserve, Keep"
+    "meaning": "둘러싸다, 포위"
   },
   {
     "id": "j462",
@@ -6029,7 +6029,7 @@
       "そこな.う",
       "のこ.り"
     ],
-    "meaning": "Remainder, Leftover, Balance"
+    "meaning": "나머지, 잔액"
   },
   {
     "id": "j473",
@@ -6236,7 +6236,7 @@
       "おく.る",
       "とつ.ぐ"
     ],
-    "meaning": "Homecoming, Arrive At, Lead To, Result In"
+    "meaning": "귀향, 도착, 결과"
   },
   {
     "id": "j491",
@@ -6258,7 +6258,7 @@
     "kunyomi": [
       "ひる"
     ],
-    "meaning": "Daytime, Noon"
+    "meaning": "낮, 정오"
   },
   {
     "id": "j493",
@@ -6318,7 +6318,7 @@
       "こう"
     ],
     "kunyomi": [],
-    "meaning": "Ward, District"
+    "meaning": "구(행정구역)"
   },
   {
     "id": "j498",
@@ -6369,7 +6369,7 @@
     "kunyomi": [
       "ひとえ"
     ],
-    "meaning": "Simple, One, Single, Merely"
+    "meaning": "단순한, 단지"
   },
   {
     "id": "j503",
@@ -6393,7 +6393,7 @@
       "か.わり",
       "か.える"
     ],
-    "meaning": "Unusual, Change, Strange"
+    "meaning": "이상한, 변화"
   },
   {
     "id": "j505",
@@ -6476,7 +6476,7 @@
     "kunyomi": [
       "あさ.い"
     ],
-    "meaning": "Shallow, Superficial, Frivolous, Wretched, Shameful"
+    "meaning": "얕은, 피상적인"
   },
   {
     "id": "j512",
@@ -6518,7 +6518,7 @@
     "kunyomi": [
       "めし"
     ],
-    "meaning": "Meal, Boiled Rice"
+    "meaning": "식사, 밥"
   },
   {
     "id": "j516",
@@ -6530,7 +6530,7 @@
     "kunyomi": [
       "ほとけ"
     ],
-    "meaning": "Buddha, The Dead, France"
+    "meaning": "부처, 불(佛), 프랑스"
   },
   {
     "id": "j517",
@@ -6550,7 +6550,7 @@
       "ばん"
     ],
     "kunyomi": [],
-    "meaning": "Nightfall, Night"
+    "meaning": "밤, 야간"
   },
   {
     "id": "j519",
@@ -6832,7 +6832,7 @@
       "や.める",
       "いな.む"
     ],
-    "meaning": "Resign, Word, Term, Expression"
+    "meaning": "사퇴하다, 말, 표현"
   },
   {
     "id": "j542",
@@ -6847,7 +6847,7 @@
       "からくり",
       "かんぬき"
     ],
-    "meaning": "Connection, Barrier, Gateway, Involve, Concerning"
+    "meaning": "관계, 장벽, 관문"
   },
   {
     "id": "j543",
@@ -6926,7 +6926,7 @@
     "kunyomi": [
       "けわ.しい"
     ],
-    "meaning": "Precipitous, Inaccessible Place, Impregnable Position, Steep Place, Sharp Eyes"
+    "meaning": "가파른, 험준한"
   },
   {
     "id": "j549",
@@ -6965,7 +6965,7 @@
     "kunyomi": [
       "もっぱ.ら"
     ],
-    "meaning": "Specialty, Exclusive, Mainly, Solely"
+    "meaning": "전문, 독점, 주로"
   },
   {
     "id": "j552",
@@ -7032,7 +7032,7 @@
     "kunyomi": [
       "くすり"
     ],
-    "meaning": "Medicine, Chemical, Enamel, Gunpowder, Benefit"
+    "meaning": "약, 의약품"
   },
   {
     "id": "j558",
@@ -7088,7 +7088,7 @@
     "kunyomi": [
       "しお"
     ],
-    "meaning": "Salt"
+    "meaning": "소금"
   },
   {
     "id": "j563",
@@ -7265,7 +7265,7 @@
     "kunyomi": [
       "わた.る"
     ],
-    "meaning": "Ford, Go Cross, Transit, Ferry, Import, Involve"
+    "meaning": "건너다, 수입하다"
   },
   {
     "id": "j577",
@@ -7278,7 +7278,7 @@
       "むな.しい",
       "うつ.ろ"
     ],
-    "meaning": "Void, Emptiness, Unpreparedness, Crack, Fissure, Untruth"
+    "meaning": "공허, 빈틈, 거짓"
   },
   {
     "id": "j578",
@@ -7331,7 +7331,7 @@
       "しょ"
     ],
     "kunyomi": [],
-    "meaning": "Signature, Govt Office, Police Station"
+    "meaning": "서명, 관청"
   },
   {
     "id": "j583",
@@ -7355,7 +7355,7 @@
       "こい",
       "こい.しい"
     ],
-    "meaning": "Romance, In Love, Yearn For, Miss, Darling"
+    "meaning": "사랑, 연애"
   },
   {
     "id": "j585",
@@ -7369,7 +7369,7 @@
       "さ.める",
       "さと.る"
     ],
-    "meaning": "Memorize, Learn, Remember, Awake, Sober Up"
+    "meaning": "암기하다, 기억하다"
   },
   {
     "id": "j586",
@@ -7381,7 +7381,7 @@
     "kunyomi": [
       "と.く"
     ],
-    "meaning": "Opinion, Theory, Explanation, Rumor"
+    "meaning": "의견, 이론, 설명"
   },
   {
     "id": "j587",
@@ -7545,7 +7545,7 @@
       "-や.き",
       "や.ける"
     ],
-    "meaning": "Bake, Burning"
+    "meaning": "굽다, 태우다"
   },
   {
     "id": "j601",
@@ -7602,7 +7602,7 @@
     "kunyomi": [
       "のうずる"
     ],
-    "meaning": "Brain, Memory"
+    "meaning": "뇌, 기억"
   },
   {
     "id": "j606",
@@ -7624,7 +7624,7 @@
       "しずか",
       "ゆず.る"
     ],
-    "meaning": "Zen, Silent Meditation"
+    "meaning": "선(禪), 명상"
   },
   {
     "id": "j608",
@@ -7639,7 +7639,7 @@
       "ため.す",
       "ためし"
     ],
-    "meaning": "Verification, Effect, Testing"
+    "meaning": "검증, 효과, 시험"
   },
   {
     "id": "j609",
@@ -7883,7 +7883,7 @@
       "れっき"
     ],
     "kunyomi": [],
-    "meaning": "Curriculum, Continuation, Passage Of Time"
+    "meaning": "과정, 계속, 경과"
   },
   {
     "id": "j630",
@@ -7963,7 +7963,7 @@
       "かたまり",
       "まる.い"
     ],
-    "meaning": "Group, Association"
+    "meaning": "집단, 단체"
   },
   {
     "id": "j637",
@@ -8008,7 +8008,7 @@
       "おさ.める",
       "わた.る"
     ],
-    "meaning": "Riot, War, Disorder, Disturb"
+    "meaning": "폭동, 소란"
   },
   {
     "id": "j640",
@@ -8060,7 +8060,7 @@
       "つづ.ける",
       "つぐ.ない"
     ],
-    "meaning": "Continue, Series, Sequel"
+    "meaning": "계속하다, 연속"
   },
   {
     "id": "j644",
@@ -8341,7 +8341,7 @@
       "おさ.える",
       "お.さえる"
     ],
-    "meaning": "Pressure, Push, Overwhelm, Oppress, Dominate"
+    "meaning": "압박, 압력"
   },
   {
     "id": "j667",
@@ -8513,7 +8513,7 @@
       "はか.る",
       "のり"
     ],
-    "meaning": "Sutra, Longitude, Pass Thru, Expire, Warp"
+    "meaning": "경전, 경도(經度)"
   },
   {
     "id": "j681",
@@ -8591,7 +8591,7 @@
       "あ.がる",
       "こぞ.る"
     ],
-    "meaning": "Raise, Plan, Project, Behavior, Actions"
+    "meaning": "올리다, 계획, 행동"
   },
   {
     "id": "j687",
@@ -8735,7 +8735,7 @@
       "ことわ.る",
       "さだ.める"
     ],
-    "meaning": "Severance, Decline, Refuse, Apologize, Warn, Dismiss, Prohibit, Decision, Judgement, Cutting"
+    "meaning": "절단, 거절, 판단"
   },
   {
     "id": "j700",
@@ -8776,7 +8776,7 @@
     "kunyomi": [
       "しら.べる"
     ],
-    "meaning": "Examination, Investigate"
+    "meaning": "조사, 검사"
   },
   {
     "id": "j704",
@@ -8802,7 +8802,7 @@
       "えだ",
       "すじ"
     ],
-    "meaning": "Article, Clause, Item, Stripe, Streak"
+    "meaning": "조항, 항목"
   },
   {
     "id": "j706",
@@ -8840,7 +8840,7 @@
       "ふ.える",
       "ふ.やす"
     ],
-    "meaning": "Increase, Add, Augment, Gain, Promote"
+    "meaning": "증가, 더하다"
   },
   {
     "id": "j709",
@@ -8849,7 +8849,7 @@
       "ぜい"
     ],
     "kunyomi": [],
-    "meaning": "Tax, Duty"
+    "meaning": "세금"
   },
   {
     "id": "j710",
@@ -8946,7 +8946,7 @@
       "ぬ.ぐ",
       "ぬ.げる"
     ],
-    "meaning": "Undress, Removing, Escape From, Get Rid Of, Be Left Out, Take Off"
+    "meaning": "벗다, 제거하다"
   },
   {
     "id": "j718",
@@ -8988,7 +8988,7 @@
       "みたまや",
       "や.める"
     ],
-    "meaning": "Lie Down, Sleep, Rest, Bed, Remain Unsold"
+    "meaning": "눕다, 자다"
   },
   {
     "id": "j721",
@@ -9060,7 +9060,7 @@
     "kunyomi": [
       "あたい"
     ],
-    "meaning": "Value, Price"
+    "meaning": "가치, 가격"
   },
   {
     "id": "j727",
@@ -9085,7 +9085,7 @@
       "いとな.む",
       "いとな.み"
     ],
-    "meaning": "Occupation, Camp, Perform, Build, Conduct (business)"
+    "meaning": "직업, 영위하다"
   },
   {
     "id": "j729",
@@ -9162,7 +9162,7 @@
       "み.る",
       "しめ.す"
     ],
-    "meaning": "Outlook, Look, Appearance, Condition, View"
+    "meaning": "전망, 외관, 모습"
   },
   {
     "id": "j736",
@@ -9220,7 +9220,7 @@
       "まさに",
       "こた.える"
     ],
-    "meaning": "Apply, Answer, Yes, Ok, Reply, Accept"
+    "meaning": "적용하다, 대답하다"
   },
   {
     "id": "j741",
@@ -9251,7 +9251,7 @@
       "じょう"
     ],
     "kunyomi": [],
-    "meaning": "Status Quo, Conditions, Circumstances, Form, Appearance"
+    "meaning": "현상, 상태, 모습"
   },
   {
     "id": "j744",
@@ -9283,7 +9283,7 @@
       "おさ.める",
       "おさ.まる"
     ],
-    "meaning": "Income, Obtain, Reap, Pay, Supply, Store"
+    "meaning": "수입, 얻다"
   },
   {
     "id": "j747",
@@ -9388,7 +9388,7 @@
       "さい",
       "みさき"
     ],
-    "meaning": "Promontory, Cape, Spit"
+    "meaning": "곶, 갑(岬)"
   },
   {
     "id": "j756",
@@ -9542,7 +9542,7 @@
       "うるお.す",
       "つや"
     ],
-    "meaning": "Swamp, Marsh, Brilliance, Grace"
+    "meaning": "늪, 광택"
   },
   {
     "id": "j769",
@@ -9719,7 +9719,7 @@
       "-とど.け",
       "とど.く"
     ],
-    "meaning": "Deliver, Reach, Arrive, Report, Notify, Forward"
+    "meaning": "전달하다, 도달하다"
   },
   {
     "id": "j784",
@@ -9734,7 +9734,7 @@
       "せば.まる",
       "さ"
     ],
-    "meaning": "Cramped, Narrow, Contract, Tight"
+    "meaning": "좁은, 비좁은"
   },
   {
     "id": "j785",
@@ -9780,7 +9780,7 @@
       "さわ.る",
       "さわ"
     ],
-    "meaning": "Contact, Touch, Feel, Hit, Proclaim, Announce, Conflict"
+    "meaning": "접촉, 만지다"
   },
   {
     "id": "j789",
@@ -9801,7 +9801,7 @@
       "そう"
     ],
     "kunyomi": [],
-    "meaning": "Stratum, Social Class, Layer, Story, Floor"
+    "meaning": "계층, 층"
   },
   {
     "id": "j791",
@@ -9825,7 +9825,7 @@
     "kunyomi": [
       "やくしょ"
     ],
-    "meaning": "Government Office"
+    "meaning": "관청"
   },
   {
     "id": "j793",
@@ -10017,7 +10017,7 @@
       "くみ.する",
       "ともに"
     ],
-    "meaning": "Bestow, Participate In, Give, Award, Impart, Provide, Cause, Gift, Godsend"
+    "meaning": "주다, 수여하다"
   },
   {
     "id": "j809",
@@ -10113,7 +10113,7 @@
       "ぬ.かす",
       "ぬ.かる"
     ],
-    "meaning": "Slip Out, Extract, Pull Out, Pilfer, Quote, Remove, Omit"
+    "meaning": "빼다, 인용하다"
   },
   {
     "id": "j817",
@@ -10241,7 +10241,7 @@
       "つく",
       "やから"
     ],
-    "meaning": "Belong, Genus, Subordinate Official, Affiliated"
+    "meaning": "속하다, 소속"
   },
   {
     "id": "j828",
@@ -10280,7 +10280,7 @@
       "み.つ",
       "み.たす"
     ],
-    "meaning": "Full, Fullness, Enough, Satisfy"
+    "meaning": "가득한, 만족"
   },
   {
     "id": "j831",
@@ -10309,7 +10309,7 @@
       "まき",
       "ま.き"
     ],
-    "meaning": "Scroll, Volume, Book, Part, Roll Up, Wind Up, Tie, Coil, Counter For Texts (or Book Scrolls)"
+    "meaning": "두루마리, 권(冊)"
   },
   {
     "id": "j833",
@@ -10322,7 +10322,7 @@
     "kunyomi": [
       "さが.す"
     ],
-    "meaning": "Search, Look For, Locate"
+    "meaning": "찾다, 탐색"
   },
   {
     "id": "j834",
@@ -10365,7 +10365,7 @@
       "かか.す",
       "よ.る"
     ],
-    "meaning": "Conceal, Hide, Cover"
+    "meaning": "감추다, 숨기다"
   },
   {
     "id": "j837",
@@ -10578,7 +10578,7 @@
       "したが.える",
       "より"
     ],
-    "meaning": "Accompany, Obey, Submit To, Comply, Follow, Secondary, Incidental, Subordinate"
+    "meaning": "따르다, 복종하다"
   },
   {
     "id": "j853",
@@ -10630,7 +10630,7 @@
       "はげ.む",
       "はげ.ます"
     ],
-    "meaning": "Encourage, Be Diligent, Inspire"
+    "meaning": "격려하다, 부지런히"
   },
   {
     "id": "j857",
@@ -10673,7 +10673,7 @@
     "kunyomi": [
       "しるし"
     ],
-    "meaning": "Indications, Sign, Omen, Symptom, Collect, Seek, Refer To, Question"
+    "meaning": "징조, 표시"
   },
   {
     "id": "j861",
@@ -10698,7 +10698,7 @@
       "けもの",
       "けだもの"
     ],
-    "meaning": "Animal, Beast"
+    "meaning": "동물, 짐승"
   },
   {
     "id": "j863",
@@ -10803,7 +10803,7 @@
     "kunyomi": [
       "ひと.り"
     ],
-    "meaning": "Single, Alone, Spontaneously, Germany"
+    "meaning": "단독, 홀로, 독일"
   },
   {
     "id": "j872",
@@ -10912,7 +10912,7 @@
       "なや.ましい",
       "なやみ"
     ],
-    "meaning": "Trouble, Worry, In Pain, Distress, Illness"
+    "meaning": "고민, 고통"
   },
   {
     "id": "j881",
@@ -11377,7 +11377,7 @@
       "しる.す",
       "と.る"
     ],
-    "meaning": "Record"
+    "meaning": "기록"
   },
   {
     "id": "j918",
@@ -11517,7 +11517,7 @@
       "しら.げる",
       "くわ.しい"
     ],
-    "meaning": "Refined, Ghost, Fairy, Energy, Vitality, Semen, Excellence, Purity, Skill"
+    "meaning": "정제된, 정기, 기술"
   },
   {
     "id": "j930",
@@ -11600,7 +11600,7 @@
     "kunyomi": [
       "う.つ"
     ],
-    "meaning": "Beat, Attack, Defeat, Conquer"
+    "meaning": "치다, 공격하다, 정복"
   },
   {
     "id": "j937",
@@ -11682,7 +11682,7 @@
       "うた.う",
       "は.く"
     ],
-    "meaning": "Europe"
+    "meaning": "유럽"
   },
   {
     "id": "j944",
@@ -11746,7 +11746,7 @@
       "こわ.れる",
       "やぶ.る"
     ],
-    "meaning": "Demolition, Break, Destroy"
+    "meaning": "파괴, 부수다"
   },
   {
     "id": "j949",
@@ -12036,7 +12036,7 @@
     "kunyomi": [
       "かわ.く"
     ],
-    "meaning": "Thirst, Dry Up, Parch"
+    "meaning": "갈증, 마르다"
   },
   {
     "id": "j974",
@@ -12192,7 +12192,7 @@
     "kunyomi": [
       "み.る"
     ],
-    "meaning": "Perusal, See"
+    "meaning": "정독,  보다"
   },
   {
     "id": "j988",
@@ -12211,7 +12211,7 @@
       "いだ.く",
       "おも.う"
     ],
-    "meaning": "Pocket, Feelings, Heart, Yearn, Miss Someone, Become Attached To, Bosom, Breast"
+    "meaning": "주머니, 그리움"
   },
   {
     "id": "j989",
@@ -12339,7 +12339,7 @@
       "うれい",
       "さわ.がしい"
     ],
-    "meaning": "Boisterous, Make Noise, Clamor, Disturb, Excite"
+    "meaning": "시끄러운, 소란"
   },
   {
     "id": "j999",
@@ -12378,7 +12378,7 @@
       "ぬす.む",
       "ぬす.み"
     ],
-    "meaning": "Steal, Rob, Pilfer"
+    "meaning": "훔치다, 강탈하다"
   },
   {
     "id": "j1002",
@@ -12437,7 +12437,7 @@
     "kunyomi": [
       "すで.に"
     ],
-    "meaning": "Previously, Already, Long Ago"
+    "meaning": "이전에, 이미, 오래전"
   },
   {
     "id": "j1007",
@@ -12519,7 +12519,7 @@
       "ろう"
     ],
     "kunyomi": [],
-    "meaning": "Corridor, Hall, Tower"
+    "meaning": "복도, 홀, 탑"
   },
   {
     "id": "j1014",
@@ -12613,7 +12613,7 @@
       "す",
       "す.くう"
     ],
-    "meaning": "Nest, Rookery, Hive, Cobweb, Den"
+    "meaning": "둥지, 소굴"
   },
   {
     "id": "j1022",
@@ -12625,7 +12625,7 @@
       "お.びる",
       "おび"
     ],
-    "meaning": "Sash, Belt, Obi, Zone, Region"
+    "meaning": "띠, 대(帶), 지역"
   },
   {
     "id": "j1023",
@@ -12639,7 +12639,7 @@
       "さしわたし",
       "ただちに"
     ],
-    "meaning": "Diameter, Path, Method"
+    "meaning": "지름, 경로, 방법"
   },
   {
     "id": "j1024",
@@ -12871,7 +12871,7 @@
     "kunyomi": [
       "さくら"
     ],
-    "meaning": "Cherry"
+    "meaning": "벚나무"
   },
   {
     "id": "j1044",
@@ -12967,7 +12967,7 @@
       "まじ.える",
       "まじ.る"
     ],
-    "meaning": "Miscellaneous"
+    "meaning": "잡다한, 기타"
   },
   {
     "id": "j1053",
@@ -13003,7 +13003,7 @@
       "ぜに",
       "すき"
     ],
-    "meaning": "Coin, .01 Yen, Money"
+    "meaning": "동전, 엽전"
   },
   {
     "id": "j1056",
@@ -13014,7 +13014,7 @@
     "kunyomi": [
       "か.う"
     ],
-    "meaning": "Domesticate, Raise, Keep, Feed"
+    "meaning": "기르다, 사육하다"
   },
   {
     "id": "j1057",
@@ -13039,7 +13039,7 @@
       "なかま",
       "むら"
     ],
-    "meaning": "Party, Faction, Clique"
+    "meaning": "당파, 정당"
   },
   {
     "id": "j1059",
@@ -13089,7 +13089,7 @@
       "-こ.み",
       "こ.める"
     ],
-    "meaning": "Crowded, Mixture, In Bulk, Included, (kokuji)"
+    "meaning": "혼잡한, 혼합"
   },
   {
     "id": "j1063",
@@ -13178,7 +13178,7 @@
     "kunyomi": [
       "わけ"
     ],
-    "meaning": "Translate, Reason, Circumstance, Case"
+    "meaning": "번역하다, 이유"
   },
   {
     "id": "j1070",
@@ -13344,7 +13344,7 @@
       "ひろ.げる",
       "ひろ.める"
     ],
-    "meaning": "Broaden, Extend, Expand, Enlarge"
+    "meaning": "넓히다, 확장하다"
   },
   {
     "id": "j1083",
@@ -13537,7 +13537,7 @@
       "おさ.める",
       "かく.れる"
     ],
-    "meaning": "Storehouse, Hide, Own, Have, Possess"
+    "meaning": "창고, 소유하다"
   },
   {
     "id": "j1099",
@@ -13550,7 +13550,7 @@
       "よそお.う",
       "よそお.い"
     ],
-    "meaning": "Attire, Dress, Pretend, Disguise, Profess"
+    "meaning": "옷차림, 가장하다"
   },
   {
     "id": "j1100",
@@ -13572,7 +13572,7 @@
     "kunyomi": [
       "もろ"
     ],
-    "meaning": "Various, Many, Several, Together"
+    "meaning": "여러, 다양한"
   },
   {
     "id": "j1102",
@@ -13604,7 +13604,7 @@
     "kunyomi": [
       "はらわた"
     ],
-    "meaning": "Entrails, Viscera, Bowels"
+    "meaning": "내장"
   },
   {
     "id": "j1105",
@@ -13649,7 +13649,7 @@
     "kunyomi": [
       "どんぶり"
     ],
-    "meaning": "Bowl, Bowl Of Food"
+    "meaning": "그릇, 사발"
   },
   {
     "id": "j1108",
@@ -13731,7 +13731,7 @@
     "kunyomi": [
       "たて"
     ],
-    "meaning": "Vertical, Length, Height, Self-indulgent, Wayward"
+    "meaning": "세로, 길이"
   },
   {
     "id": "j1115",
@@ -13742,7 +13742,7 @@
     "kunyomi": [
       "いき"
     ],
-    "meaning": "Chic, Style, Purity, Essence, Pith, Cream, Elite, Choice"
+    "meaning": "세련된, 순수"
   },
   {
     "id": "j1116",
@@ -13814,7 +13814,7 @@
       "おが.む",
       "おろが.む"
     ],
-    "meaning": "Worship, Adore, Pray To"
+    "meaning": "숭배하다, 기도하다"
   },
   {
     "id": "j1122",
@@ -14569,7 +14569,7 @@
       "なわ",
       "ただ.す"
     ],
-    "meaning": "Straw Rope, Cord"
+    "meaning": "짚, 새끼줄"
   },
   {
     "id": "j1185",
@@ -15083,7 +15083,7 @@
     "kunyomi": [
       "かか.げる"
     ],
-    "meaning": "Put Up (a Notice), Put Up, Hoist, Display, Hang Out, Publish, Describe"
+    "meaning": "내걸 게"
   },
   {
     "id": "j1229",
@@ -15128,7 +15128,7 @@
       "よわい",
       "とし"
     ],
-    "meaning": "Age"
+    "meaning": "나이 령(영)"
   },
   {
     "id": "j1233",
@@ -15239,7 +15239,7 @@
     "kunyomi": [
       "あわ.せる"
     ],
-    "meaning": "Join, Get Together, Unite, Collective"
+    "meaning": "아우를 병"
   },
   {
     "id": "j1243",
@@ -15353,7 +15353,7 @@
     "kunyomi": [
       "えら.ぶ"
     ],
-    "meaning": "Choose, Select, Elect, Prefer"
+    "meaning": "가릴 택"
   },
   {
     "id": "j1252",
@@ -15391,7 +15391,7 @@
       "はか.る",
       "ほめ.る"
     ],
-    "meaning": "Appellation, Praise, Admire, Name, Title, Fame"
+    "meaning": "일컬을 칭"
   },
   {
     "id": "j1255",
@@ -15404,7 +15404,7 @@
       "お",
       "いとぐち"
     ],
-    "meaning": "Thong, Beginning, Inception, End, Cord, Strap, Mental Or Emotional State"
+    "meaning": "실마리 서"
   },
   {
     "id": "j1256",
@@ -15614,7 +15614,7 @@
       "しぶ.い",
       "しぶ.る"
     ],
-    "meaning": "Astringent, Hesitate, Reluctant, Have Diarrhea"
+    "meaning": "떫을 삽"
   },
   {
     "id": "j1274",
@@ -15686,7 +15686,7 @@
     "kunyomi": [
       "すす.める"
     ],
-    "meaning": "Persuade, Recommend, Advise, Encourage, Offer"
+    "meaning": "권할 권"
   },
   {
     "id": "j1280",
@@ -15697,7 +15697,7 @@
     "kunyomi": [
       "かこ.い"
     ],
-    "meaning": "Sphere, Circle, Radius, Range"
+    "meaning": "우리 권"
   },
   {
     "id": "j1281",
@@ -15765,7 +15765,7 @@
       "つつし",
       "つつし.み"
     ],
-    "meaning": "Humility, Be Careful, Discreet, Prudent"
+    "meaning": "삼갈 신"
   },
   {
     "id": "j1286",
@@ -15786,7 +15786,7 @@
     "kunyomi": [
       "わく"
     ],
-    "meaning": "Frame, Framework, Spindle, Spool, Bounding-box, (kokuji)"
+    "meaning": "틀 화"
   },
   {
     "id": "j1288",
@@ -17441,7 +17441,7 @@
       "へり",
       "えにし"
     ],
-    "meaning": "Affinity, Relation, Connection, Edge, Border, Verge, Brink"
+    "meaning": "인연, 관계"
   },
   {
     "id": "j1429",
@@ -19559,7 +19559,7 @@
     "kunyomi": [
       "おおむ.ね"
     ],
-    "meaning": "Outline, Condition, Approximation, Generally"
+    "meaning": "개요, 대략"
   },
   {
     "id": "j1612",

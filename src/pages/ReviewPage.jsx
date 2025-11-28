@@ -1,17 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import QuizArea from '../components/study/QuizArea';
 
 const ReviewPage = ({ globalWrongAnswers, removeFromGlobalReview }) => {
     const navigate = useNavigate();
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    if (isPlaying) {
+        return (
+            <div className="page-container">
+                <QuizArea
+                    customData={globalWrongAnswers}
+                    initialMode="review"
+                    addToGlobalReview={() => { }} // No need to add to review from review mode? Or maybe yes if they get it wrong again? But logic might need adjustment.
+                    globalWrongAnswers={globalWrongAnswers}
+                />
+            </div>
+        );
+    }
 
     return (
         <div className="page-container">
             <button className="home-btn" onClick={() => navigate('/')}>🏠 HOME</button>
             <div className="review-box-container" style={{ marginTop: '60px' }}>
                 <h2>REVIEW BOX ({globalWrongAnswers.length})</h2>
+
+                {globalWrongAnswers.length > 0 && (
+                    <button
+                        className="play-review-btn"
+                        onClick={() => setIsPlaying(true)}
+                        style={{
+                            fontFamily: "'Press Start 2P', cursive",
+                            padding: '15px 30px',
+                            background: '#39ff14',
+                            color: '#000',
+                            border: '4px solid #fff',
+                            cursor: 'pointer',
+                            marginBottom: '20px',
+                            boxShadow: '4px 4px 0 #000'
+                        }}
+                    >
+                        PLAY REVIEW QUIZ 🎮
+                    </button>
+                )}
+
                 {globalWrongAnswers.length === 0 ? <p>No items to review.</p> : (
                     <div className="review-list" style={{
-                        maxHeight: '70vh',
+                        maxHeight: '60vh',
                         overflowY: 'auto',
                         padding: '10px',
                         border: '2px solid #555',

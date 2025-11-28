@@ -91,7 +91,7 @@ const HomePage = ({ level, xp, togglePip, pipWindow, globalWrongAnswers, user, o
                     {pipWindow ? "CLOSE PIP" : "OPEN PIP MODE"}
                 </button>
             </div>
-        </div >
+        </div>
     );
 };
 

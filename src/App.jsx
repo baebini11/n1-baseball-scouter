@@ -31,6 +31,7 @@ const ScrollToTop = () => {
 import WordTicker from './components/common/WordTicker';
 import joyoKanji from './data/joyo_kanji.json';
 import jlptN1Grammar from './data/jlpt_n1_grammar.json';
+import jlptN1Vocab from './data/jlpt_n1.json';
 import './App.css';
 
 const RefreshButton = ({ onRefresh, isRefreshing }) => {
@@ -298,8 +299,9 @@ function App() {
               } />
               <Route path="/study" element={
                 <StudyPage
-                  joyoKanji={joyoKanji}
-                  jlptN1Grammar={jlptN1Grammar}
+                  vocab={jlptN1Vocab}
+                  kanji={joyoKanji}
+                  grammar={jlptN1Grammar}
                   addToGlobalReview={handleAddToGlobalReview}
                   globalWrongAnswers={wrongAnswers}
                   xp={xp}

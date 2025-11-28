@@ -7,7 +7,7 @@ const GamePage = ({ joyoKanji, jlptN1Grammar, level, setLevel, xp, setXp, addToG
 
     return (
         <div className="page-container">
-            <button className="home-btn" onClick={() => navigate('/')}>🏠 HOME</button>
+
             <ReactionGame
                 words={joyoKanji}
                 grammar={jlptN1Grammar}

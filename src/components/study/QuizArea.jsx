@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import QuestionCard from './QuestionCard';
 import './QuizArea.css';
 
-const QuizArea = ({ words, grammar, addToGlobalReview, globalWrongAnswers }) => {
+const QuizArea = ({ vocab, kanji, grammar, addToGlobalReview, globalWrongAnswers, customData = null, initialMode = 'vocab' }) => {
+    const navigate = useNavigate();
     const [quizState, setQuizState] = useState('intro'); // intro, playing, result
-    const [mode, setMode] = useState('vocab'); // 'vocab' or 'grammar'
+    const [mode, setMode] = useState(initialMode); // 'vocab', 'kanji', 'grammar', 'review'
     const [questions, setQuestions] = useState([]);
     const [userAnswers, setUserAnswers] = useState({});
     const [score, setScore] = useState(0);
     const [wrongQuestions, setWrongQuestions] = useState([]);
     const [showReview, setShowReview] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+    useEffect(() => {
+        if (initialMode === 'review' && customData) {
+            setMode('review');
+            // Auto-start for review mode if desired, or let user click start
+        }
+    }, [initialMode, customData]);
 
     const getReading = (item) => {
         if (item.furigana) return item.furigana;
@@ -21,13 +30,18 @@ const QuizArea = ({ words, grammar, addToGlobalReview, globalWrongAnswers }) => 
     };
 
     const startQuiz = (count) => {
-        const sourceData = mode === 'vocab' ? words : grammar;
+        let sourceData;
+        if (mode === 'vocab') sourceData = vocab;
+        else if (mode === 'kanji') sourceData = kanji;
+        else if (mode === 'grammar') sourceData = grammar;
+        else if (mode === 'review') sourceData = customData;
+
         if (!sourceData || sourceData.length === 0) {
             alert("No data available for this mode.");
             return;
         }
 
-        const batchSize = count === 'all' ? sourceData.length : count;
+        const batchSize = count === 'all' ? sourceData.length : Math.min(count, sourceData.length);
         const newQuestions = generateBatch(sourceData, batchSize);
 
         setQuestions(newQuestions);
@@ -50,21 +64,52 @@ const QuizArea = ({ words, grammar, addToGlobalReview, globalWrongAnswers }) => 
     };
 
     const createQuestionObject = (item, sourceData) => {
-        if (mode === 'grammar') {
+        // Determine type based on item properties or mode
+        const isGrammar = mode === 'grammar' || (mode === 'review' && item.grammar);
+
+        if (isGrammar) {
             const shuffledOptions = [...item.options].sort(() => 0.5 - Math.random());
             return { word: item, options: shuffledOptions, isGrammar: true };
         } else {
             const distractors = [];
             const correctReading = getReading(item);
 
-            while (distractors.length < 3) {
-                const randomDistractor = words[Math.floor(Math.random() * words.length)];
+            // For review mode, we need to be careful about distractors. 
+            // If sourceData is small (e.g. only 1 wrong answer), we might need to pull distractors from the main vocab/kanji data.
+            // But for simplicity, let's try to pull from sourceData first, and fallback if needed.
+            // Actually, if it's review mode, we should probably pull distractors from the FULL dataset (vocab/kanji) to ensure quality distractors.
+            let distractorSource = sourceData;
+            if (mode === 'review') {
+                if (item.kanji && !item.grammar) {
+                    // Try to find which dataset this item belongs to
+                    // This is a bit tricky. Let's assume it's vocab or kanji.
+                    // We can just use the full vocab/kanji lists if available.
+                    if (vocab && vocab.some(v => v.id === item.id)) distractorSource = vocab;
+                    else if (kanji && kanji.some(k => k.id === item.id)) distractorSource = kanji;
+                }
+            }
+
+            // Fallback if distractorSource is too small (less than 4 items)
+            if (distractorSource.length < 4) {
+                if (vocab && vocab.length >= 4) distractorSource = vocab;
+                else if (kanji && kanji.length >= 4) distractorSource = kanji;
+            }
+
+            let attempts = 0;
+            while (distractors.length < 3 && attempts < 100) {
+                const randomDistractor = distractorSource[Math.floor(Math.random() * distractorSource.length)];
                 const distractorReading = getReading(randomDistractor);
 
                 if (randomDistractor.id !== item.id && !distractors.includes(distractorReading) && distractorReading !== correctReading) {
                     distractors.push(distractorReading);
                 }
+                attempts++;
             }
+            // Fill with placeholders if needed (shouldn't happen with proper data)
+            while (distractors.length < 3) {
+                distractors.push(`Option ${distractors.length + 1}`);
+            }
+
             const options = [...distractors, correctReading].sort(() => 0.5 - Math.random());
             return { word: item, options, isGrammar: false };
         }
@@ -79,7 +124,12 @@ const QuizArea = ({ words, grammar, addToGlobalReview, globalWrongAnswers }) => 
 
     const nextQuestion = () => {
         if (currentQuestionIndex === questions.length - 1) {
-            const sourceData = mode === 'vocab' ? words : grammar;
+            let sourceData;
+            if (mode === 'vocab') sourceData = vocab;
+            else if (mode === 'kanji') sourceData = kanji;
+            else if (mode === 'grammar') sourceData = grammar;
+            else if (mode === 'review') sourceData = customData;
+
             const randomItem = sourceData[Math.floor(Math.random() * sourceData.length)];
             const newQuestion = createQuestionObject(randomItem, sourceData);
 
@@ -115,9 +165,6 @@ const QuizArea = ({ words, grammar, addToGlobalReview, globalWrongAnswers }) => 
     const isCurrentAnswered = currentQ && userAnswers[currentQ.word.id];
     const currentAnswer = currentQ ? userAnswers[currentQ.word.id] : null;
 
-    // Fix: Ensure strict equality works by trimming or normalizing if needed, but usually direct match is fine if options come from same source.
-    // The issue might be that 'getReading' returns different string instances or formatting?
-    // Let's ensure we compare exactly what was clicked.
     const correctAnswerText = currentQ ? (currentQ.isGrammar ? currentQ.word.answer : getReading(currentQ.word)) : null;
     const isCurrentCorrect = currentQ && currentAnswer === correctAnswerText;
 
@@ -126,29 +173,47 @@ const QuizArea = ({ words, grammar, addToGlobalReview, globalWrongAnswers }) => 
     if (quizState === 'intro') {
         return (
             <div className="quiz-intro">
-                <h2>SELECT MODE</h2>
-                <div className="mode-selection">
-                    <button
-                        className={`mode-btn ${mode === 'vocab' ? 'active' : ''}`}
-                        onClick={() => setMode('vocab')}
-                    >
-                        VOCABULARY
-                    </button>
-                    <button
-                        className={`mode-btn ${mode === 'grammar' ? 'active' : ''}`}
-                        onClick={() => setMode('grammar')}
-                    >
-                        GRAMMAR
-                    </button>
-                </div>
+                <button className="home-btn" onClick={() => navigate('/')} style={{ marginBottom: '20px' }}>🏠 HOME</button>
 
-                <h2>SELECT QUESTION COUNT</h2>
+                {mode !== 'review' && (
+                    <>
+                        <h2>SELECT MODE</h2>
+                        <div className="mode-selection">
+                            <button
+                                className={`mode-btn ${mode === 'vocab' ? 'active' : ''}`}
+                                onClick={() => setMode('vocab')}
+                            >
+                                VOCABULARY
+                            </button>
+                            <button
+                                className={`mode-btn ${mode === 'kanji' ? 'active' : ''}`}
+                                onClick={() => setMode('kanji')}
+                            >
+                                KANJI
+                            </button>
+                            <button
+                                className={`mode-btn ${mode === 'grammar' ? 'active' : ''}`}
+                                onClick={() => setMode('grammar')}
+                            >
+                                GRAMMAR
+                            </button>
+                        </div>
+                    </>
+                )}
+
+                <h2>{mode === 'review' ? 'REVIEW QUIZ' : 'SELECT QUESTION COUNT'}</h2>
                 <div className="count-buttons">
-                    {[1, 10, 20, 30, 'all'].map(count => (
-                        <button key={count} onClick={() => startQuiz(count)} className="intro-btn">
-                            {count === 'all' ? 'ALL QUESTIONS' : `${count} QUESTIONS`}
+                    {mode === 'review' ? (
+                        <button onClick={() => startQuiz(customData.length)} className="intro-btn">
+                            START REVIEW ({customData.length})
                         </button>
-                    ))}
+                    ) : (
+                        [1, 10, 20, 30].map(count => (
+                            <button key={count} onClick={() => startQuiz(count)} className="intro-btn">
+                                {`${count} QUESTIONS`}
+                            </button>
+                        ))
+                    )}
                 </div>
             </div>
         );
@@ -201,7 +266,7 @@ const QuizArea = ({ words, grammar, addToGlobalReview, globalWrongAnswers }) => 
                                     <button
                                         className="action-btn add-review"
                                         disabled={isInGlobalReview(currentQ.word.id)}
-                                        onClick={() => addToGlobalReview(currentQ.word, currentQ.isGrammar ? 'grammar' : 'vocab')}
+                                        onClick={() => addToGlobalReview(currentQ.word, mode)}
                                     >
                                         {isInGlobalReview(currentQ.word.id) ? "SAVED IN BOX" : "ADD TO REVIEW BOX"}
                                     </button>
@@ -263,7 +328,7 @@ const QuizArea = ({ words, grammar, addToGlobalReview, globalWrongAnswers }) => 
                                     <button
                                         className="action-btn add-review small"
                                         disabled={isInGlobalReview(q.word.id)}
-                                        onClick={() => addToGlobalReview(q.word, q.isGrammar ? 'grammar' : 'vocab')}
+                                        onClick={() => addToGlobalReview(q.word, mode)}
                                         style={{ marginTop: '10px' }}
                                     >
                                         {isInGlobalReview(q.word.id) ? "SAVED" : "ADD TO BOX"}
@@ -274,9 +339,18 @@ const QuizArea = ({ words, grammar, addToGlobalReview, globalWrongAnswers }) => 
                     )}
 
                     <div className="result-actions">
-                        <button className="new-round-button" onClick={() => setQuizState('intro')}>
-                            MAIN MENU
+                        <button className="new-round-button" onClick={() => {
+                            if (mode === 'review') {
+                                // If in review mode, go back to main menu or restart review?
+                                // Let's go back to main menu or reload page to reset state cleanly
+                                navigate('/');
+                            } else {
+                                setQuizState('intro');
+                            }
+                        }}>
+                            {mode === 'review' ? 'EXIT REVIEW' : 'MAIN MENU'}
                         </button>
+                        <button className="home-btn" onClick={() => navigate('/')} style={{ marginLeft: '20px' }}>🏠 HOME</button>
                     </div>
                 </div>
             )}

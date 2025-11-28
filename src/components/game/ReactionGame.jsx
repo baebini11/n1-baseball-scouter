@@ -11,6 +11,7 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
     const [timeLeft, setTimeLeft] = useState(0);
     const [combo, setCombo] = useState(0);
     const [wrongQuestions, setWrongQuestions] = useState([]);
+    const [feedback, setFeedback] = useState(null); // null, 'correct', 'wrong'
     const [showReview, setShowReview] = useState(false);
 
     const timerRef = useRef(null);
@@ -22,7 +23,7 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
     const timeLimit = mode === 'boss' ? 3 : 5;
 
     useEffect(() => {
-        if (gameState === 'playing' || gameState === 'boss_playing') {
+        if ((gameState === 'playing' || gameState === 'boss_playing') && !feedback) {
             if (timeLeft > 0) {
                 timerRef.current = setTimeout(() => setTimeLeft(prev => Math.max(0, prev - 0.1)), 100);
             } else {
@@ -30,7 +31,7 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
             }
         }
         return () => clearTimeout(timerRef.current);
-    }, [timeLeft, gameState]);
+    }, [timeLeft, gameState, feedback]);
 
     const getReadingString = (item) => {
         if (item.furigana) return item.furigana;
@@ -47,11 +48,13 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
         setCombo(0);
         setWrongQuestions([]);
         setShowReview(false);
+        setFeedback(null);
         setGameState(selectedMode === 'boss' ? 'boss_playing' : 'playing');
         nextQuestion(selectedMode);
     };
 
     const nextQuestion = (currentMode) => {
+        setFeedback(null);
         const targetCount = currentMode === 'boss' ? bossQuestionsCount : 20;
         if (questionCount >= targetCount) {
             endGame(true);
@@ -177,6 +180,8 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
         setQuestionCount(prev => prev + 1);
     };
 
+
+
     const getDistractors = (dataset, currentItem, type, targetLabel = '') => {
         const others = dataset.filter(d => d.id !== currentItem.id);
         const shuffled = others.sort(() => Math.random() - 0.5);
@@ -192,8 +197,12 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
 
     const handleAnswer = (answer) => {
         if (gameState !== 'playing' && gameState !== 'boss_playing') return;
+        if (feedback) return; // Prevent multiple clicks
 
-        if (answer === currentQuestion.correct) {
+        const isCorrect = answer === currentQuestion.correct;
+        setFeedback(isCorrect ? 'correct' : 'wrong');
+
+        if (isCorrect) {
             setScore(prev => prev + 1);
             setCombo(prev => prev + 1);
 
@@ -204,37 +213,42 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
 
             // Check for Boss Mode Win
             if (mode === 'boss' && questionCount === bossQuestionsCount) {
-                // Level Up!
-                setLevel(prev => prev + 1);
-                // setXp(0); // Reset XP or keep it? Usually reset for next level
-                endGame(true);
+                setTimeout(() => {
+                    setLevel(prev => prev + 1);
+                    endGame(true);
+                }, 1000);
                 return;
             }
-
-            nextQuestion(mode);
         } else {
-            // Wrong Answer
             setWrongQuestions(prev => [...prev, currentQuestion]);
+        }
 
+        setTimeout(() => {
+            if (!isCorrect) {
+                if (mode === 'boss') {
+                    setGameState('game_over');
+                } else {
+                    setCombo(0);
+                    nextQuestion(mode);
+                }
+            } else {
+                nextQuestion(mode);
+            }
+        }, 800); // 0.8s delay for feedback
+    };
+
+    const handleTimeOut = () => {
+        setFeedback('wrong');
+        setWrongQuestions(prev => [...prev, currentQuestion]);
+
+        setTimeout(() => {
             if (mode === 'boss') {
-                // Boss mode: One mistake = Game Over
                 setGameState('game_over');
             } else {
                 setCombo(0);
                 nextQuestion(mode);
             }
-        }
-    };
-
-    const handleTimeOut = () => {
-        setWrongQuestions(prev => [...prev, currentQuestion]);
-
-        if (mode === 'boss') {
-            setGameState('game_over');
-        } else {
-            setCombo(0);
-            nextQuestion(mode);
-        }
+        }, 800);
     };
 
     const endGame = (completed) => {
@@ -244,7 +258,10 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
     const canChallengeBoss = xp >= bossCost;
 
     return (
-        <div className="reaction-game" style={{ height: 'calc(100vh - 80px)' }}>
+        <div className="reaction-game" style={{ height: 'calc(100vh - 80px)', position: 'relative' }}>
+            {/* 홈 버튼을 항상 왼쪽 위에 고정 */}
+            <button className="home-btn-fixed" onClick={onExit}>🏠 HOME</button>
+
             {gameState === 'menu' && (
                 <div className="game-menu">
                     <h1 className="game-title">⚡ REACTION TEST ⚡</h1>
@@ -281,43 +298,57 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
             )}
 
             {(gameState === 'playing' || gameState === 'boss_playing') && currentQuestion && (
-                <div className={`game-interface ${mode}`}>
-                    <div className="game-header">
-                        <div className="timer-bar" style={{ width: `${(timeLeft / timeLimit) * 100}%`, transition: 'width 0.1s linear' }}></div>
-                        <div className="game-info">
-                            <span>Q: {questionCount} / {totalQuestions}</span>
-                            <span>COMBO: {combo}</span>
-                        </div>
-                        <button
-                            className="back-btn-small"
-                            onClick={() => setGameState('menu')}
-                            style={{
-                                marginTop: '10px',
-                                background: 'transparent',
-                                border: '1px solid #555',
-                                color: '#aaa',
-                                padding: '5px 10px',
-                                cursor: 'pointer',
-                                fontSize: '0.8em',
-                                fontFamily: 'Press Start 2P'
-                            }}
-                        >
-                            EXIT TO MENU
-                        </button>
-                    </div>
-
-                    <div className="question-display">
-                        {currentQuestion.text}
-                    </div>
-
-                    <div className="options-grid">
-                        {options.map((opt, idx) => (
-                            <button key={idx} className="option-btn" onClick={() => handleAnswer(opt)}>
-                                {opt}
+                <>
+                    <div className={`game-interface ${mode} ${feedback ? (feedback === 'correct' ? 'feedback-correct' : 'feedback-wrong') : ''}`}>
+                        <div className="game-header">
+                            <div className="timer-bar" style={{ width: `${(timeLeft / timeLimit) * 100}%`, transition: 'width 0.1s linear' }}></div>
+                            <div className="game-info">
+                                <span>Q: {questionCount} / {totalQuestions}</span>
+                                <span>COMBO: {combo}</span>
+                            </div>
+                            <button
+                                className="back-btn-small"
+                                onClick={() => setGameState('menu')}
+                                style={{
+                                    marginTop: '10px',
+                                    background: 'transparent',
+                                    border: '1px solid #555',
+                                    color: '#aaa',
+                                    padding: '5px 10px',
+                                    cursor: 'pointer',
+                                    fontSize: '0.8em',
+                                    fontFamily: 'Press Start 2P'
+                                }}
+                            >
+                                EXIT TO MENU
                             </button>
-                        ))}
+                        </div>
+
+                        <div className="question-display">
+                            {currentQuestion.text}
+                        </div>
+
+                        <div className="options-grid">
+                            {options.map((opt, idx) => (
+                                <button
+                                    key={idx}
+                                    className={`option-btn ${feedback === 'correct' && opt === currentQuestion.correct ? 'correct' : ''} ${feedback === 'wrong' && opt !== currentQuestion.correct ? 'dim' : ''}`}
+                                    onClick={() => handleAnswer(opt)}
+                                    disabled={feedback !== null}
+                                >
+                                    {opt}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* 피드백 아이콘을 우측 상단에 표시 (스터디 스타일) */}
+                        {feedback && (
+                            <div className={`feedback-icon ${feedback}`}>
+                                {feedback === 'correct' ? 'O' : 'X'}
+                            </div>
+                        )}
                     </div>
-                </div>
+                </>
             )}
 
             {gameState === 'game_over' && (

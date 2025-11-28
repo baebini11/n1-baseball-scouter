@@ -70,7 +70,7 @@
     padding: 20px;
     margin-bottom: 20px;
     font-family: 'Press Start 2P', cursive;
-    font-size: 1rem;
+    font-size: 1.5em;
     border: 4px solid #fff;
     cursor: pointer;
     transition: all 0.2s;
@@ -120,15 +120,28 @@
     font-size: 0.6rem;
     margin-top: 5px;
     font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
-    /* Readable Font */
     font-weight: bold;
 }
 
-/* Game Interface */
+/* Game Interface - Study Design */
 .game-interface {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    background-color: #111;
+    border: 2px solid #333;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Game Interface with Feedback Border */
+.game-interface.feedback-correct {
+    border-color: #39ff14;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+}
+
+.game-interface.feedback-wrong {
+    border-color: #ff0055;
+    box-shadow: 0 0 10px rgba(255, 0, 85, 0.2);
 }
 
 .game-header {
@@ -147,43 +160,70 @@
     justify-content: space-between;
     font-size: 0.8rem;
     color: #39ff14;
+    margin-bottom: 10px;
 }
 
+/* Question Display - 왼쪽 정렬, 글자 크기 줄임 */
 .question-display {
     flex: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    text-align: center;
+    justify-content: flex-start;
+    font-size: 1.8em;
+    text-align: left;
     margin-bottom: 20px;
-    text-shadow: 4px 4px 0 #000;
-    font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
-    /* Readable Font */
+    padding-left: 10px;
+    color: #fff;
+    font-family: 'Noto Sans JP', sans-serif;
     font-weight: bold;
+    min-height: 120px;
 }
 
+/* Options Grid - Study Design */
 .options-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 10px;
     margin-bottom: 20px;
 }
 
+/* Option Buttons - Study Design */
 .option-btn {
-    padding: 20px;
+    padding: 15px;
+    background: #222;
+    border: 2px solid #444;
+    color: #fff;
+    cursor: pointer;
     font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
-    /* Readable Font */
-    font-size: 1rem;
-    background: rgba(0, 0, 0, 0.8);
-    flex-direction: column;
+    font-size: 1.5em;
+    transition: all 0.2s;
+    text-align: center;
 }
 
-.review-screen h2 {
-    color: #ffcc00;
-    margin-bottom: 20px;
+.option-btn:hover:not(:disabled) {
+    background: #333;
+    border-color: #666;
 }
 
+.option-btn:active:not(:disabled) {
+    background: #444;
+}
+
+/* Option Button Feedback States - Study Design */
+.option-btn.correct {
+    background: #004400;
+    border-color: #39ff14;
+    color: #39ff14;
+}
+
+.option-btn.dim {
+    opacity: 0.7;
+    background: #440000;
+    border-color: #ff0055;
+    color: #ff0055;
+}
+
+/* Review Section */
 .review-list-container {
     flex: 1;
     overflow-y: auto;
@@ -198,6 +238,8 @@
 
 .review-list-container::-webkit-scrollbar-track {
     background: #333;
+    padding-top: 5px;
+    margin-top: 5px;
 }
 
 .review-list-container::-webkit-scrollbar-thumb {
@@ -205,15 +247,15 @@
 }
 
 .review-item {
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid #ff0055;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #ff0055;
     padding: 15px;
     margin-bottom: 15px;
+    text-align: left;
 }
 
 .review-q-text {
     font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
-    /* Readable Font */
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 10px;
@@ -230,7 +272,6 @@
     color: #39ff14;
     font-weight: bold;
     font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
-    /* Readable Font */
 }
 
 .review-detail {
@@ -240,5 +281,59 @@
     padding-top: 5px;
     margin-top: 5px;
     font-family: 'Pretendard', 'Noto Sans JP', sans-serif;
-    /* Readable Font */
+}
+
+/* Home Button - 검은 배경, 흰 글자, 얇은 테두리 */
+.home-btn-fixed {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-family: 'Press Start 2P', cursive;
+    padding: 10px 20px;
+    background: #000;
+    color: #fff;
+    border: 2px solid #fff;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #000;
+    transition: all 0.2s;
+    z-index: 1000;
+}
+
+.home-btn-fixed:hover {
+    background: #333;
+    border-color: #fff;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 #000;
+}
+
+/* Feedback Icon - O/X 우측 상단, 콤보 아래 */
+.feedback-icon {
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    font-size: 2em;
+    font-weight: bold;
+    font-family: 'Press Start 2P', cursive;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10;
+}
+
+.feedback-icon.correct {
+    color: #39ff14;
+}
+
+.feedback-icon.wrong {
+    color: #ff0055;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
