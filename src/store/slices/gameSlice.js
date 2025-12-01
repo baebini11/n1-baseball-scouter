@@ -14,10 +14,14 @@ const gameSlice = createSlice({
     initialState,
     reducers: {
         setGameData: (state, action) => {
-            const newState = { ...state, ...action.payload, lastSynced: Date.now() };
-            // Ensure new fields exist if missing from payload/state
-            if (!newState.hallOfFame) newState.hallOfFame = [];
-            return newState;
+            // Redux Toolkit의 Immer 사용: state를 직접 수정
+            Object.keys(action.payload).forEach(key => {
+                state[key] = action.payload[key];
+            });
+            state.lastSynced = Date.now();
+
+            // Ensure new fields exist
+            if (!state.hallOfFame) state.hallOfFame = [];
         },
         setXp: (state, action) => {
             state.xp = action.payload;

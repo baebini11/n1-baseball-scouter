@@ -135,3 +135,83 @@ graph TD
    ```bash
    npm run dev
    ```
+
+---
+
+## 🔐 Data Synchronization & Session Management
+
+### 문제점 (Problem)
+
+1. **데이터 로드 순서 충돌**
+   - Redux Persist와 Firebase가 동시에 비동기로 실행
+   - 로컬 캐시 데이터가 Firestore 최신 데이터를 덮어쓸 위험
+   - 배포 서버와 로컬 개발 환경에서 같은 계정 사용 시 데이터 손실 가능
+
+2. **중복 로그인 이슈**
+   - 여러 탭/기기에서 동시 접속 시 데이터 충돌
+   - XP 소모 작업(스카우트, 훈련)의 비동기 처리로 중복 작업 발생
+   - 마지막 저장이 이전 저장을 덮어쓰는 "Last Write Wins" 문제
+
+### 해결 방안 (Solution)
+
+#### 1. Firestore 우선 로드 보장
+```javascript
+// 로그인 시 데이터 로드 순서
+페이지 로드 
+  → Firebase Auth 확인
+  → Firestore 데이터 로드 완료 대기
+  → Redux 상태 업데이트
+  → 앱 렌더링
+```
+
+- `dataLoaded` state로 Firestore 로드 완료 추적
+- 로그인 사용자는 항상 Firestore 데이터 우선
+- 게스트 모드(비로그인)만 Redux Persist 로컬 데이터 사용
+
+#### 2. 실시간 세션 관리
+
+Firestore의 `onSnapshot` 리스너를 활용한 실시간 중복 로그인 감지:
+
+```mermaid
+sequenceDiagram
+    participant U1 as 기존 세션
+    participant FS as Firestore
+    participant U2 as 새 로그인
+    
+    U1->>FS: sessionId: "abc123" 저장
+    U1->>FS: onSnapshot 리스너 시작
+    
+    Note over U2: 같은 계정으로 로그인
+    U2->>FS: sessionId: "xyz789" 저장
+    
+    FS-->>U1: 세션 변경 감지
+    U1->>U1: "중복 로그인 감지" 모달
+    Note over U1: 2초 후 자동 로그아웃
+    
+    U2->>U2: "타 기기 로그아웃" 모달
+    Note over U2: 2초 후 정상 진행
+```
+
+**핵심 로직:**
+- 로그인 시 고유 세션 ID 생성 (`crypto.randomUUID()`)
+- Firestore에 세션 정보 저장
+- 실시간 리스너로 세션 변경 감지
+- 중복 감지 시 양쪽 모두 모달 표시 후 기존 세션 강제 로그아웃
+
+### Firestore Security Rules (필수)
+
+Firebase Console → Firestore Database → Rules:
+
+```javascript
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+---

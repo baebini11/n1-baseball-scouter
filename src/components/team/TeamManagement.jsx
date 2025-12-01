@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { BASIC_STATS, calculateTrainingCost, getStatRank, calculateBaseballStats, simulateProCareer } from '../../utils/prospectUtils';
+import { useDispatch, useSelector } from 'react-redux';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { BASIC_STATS, calculateTrainingCost, getStatRank, calculateBaseballStats, simulateProCareer, generateProspect } from '../../utils/prospectUtils';
+import { LEAGUE_HISTORY } from '../../data/baseballEras';
 import { removeProspect, updateProspect as updateProspectAction, setXp as setXpAction, addToHallOfFame } from '../../store/slices/gameSlice';
+import useXpValidation from '../../hooks/useXpValidation';
 import './CardCollection.css'; // Reusing CSS for grid layout
 
 // Helper: Convert HEX to HSL
@@ -92,16 +96,35 @@ const getHighestPotentialStat = (prospect) => {
     return maxStat;
 };
 
-const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
+const TeamManagement = ({ updateProspect, xp, setXp, level, user, onXpReloadNeeded }) => {
     const dispatch = useDispatch();
+
+    // Redux에서 직접 prospects 가져오기 (props 대신)
+    const prospectsFromRedux = useSelector(state => state.game.prospects || []);
+    const prospects = prospectsFromRedux; // 로컬 변수로 사용
+
+    // XP 검증 훅
+    const { validateXP, isValidating } = useXpValidation(user, xp, onXpReloadNeeded);
     const [selectedProspect, setSelectedPlayer] = useState(null);
     const [activeTab, setActiveTab] = useState('roster'); // roster, training, matching
     const [mainTab, setMainTab] = useState('trainees'); // trainees, graduates, my_team
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
 
+    // selectedProspect 동기화: prospects가 업데이트되면 선택된 선수도 업데이트
+    useEffect(() => {
+        if (selectedProspect) {
+            const updatedProspect = prospects.find(p => p.id === selectedProspect.id);
+            if (updatedProspect) {
+                setSelectedPlayer(updatedProspect);
+            }
+        }
+    }, [prospects]); // prospects 변경 시 실행
+
     // Simulation State
-    const [simulationStep, setSimulationStep] = useState('idle'); // idle, projected, revealing, finished
+    const [simulationStep, setSimulationStep] = useState('idle'); // idle, era_select, year_select, projected, revealing, finished
+    const [targetYear, setTargetYear] = useState(2024);
+    const [selectedEra, setSelectedEra] = useState(null); // '1980s', '1990s', etc.
     const [projectedCareer, setProjectedCareer] = useState(null);
     const [actualCareer, setActualCareer] = useState(null);
     const [displayedSeasons, setDisplayedSeasons] = useState([]);
@@ -112,6 +135,13 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
     // Image Modal State
     const [imageModalOpen, setImageModalOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+
+    // Bulk Training State
+    const [trainingModalOpen, setTrainingModalOpen] = useState(false);
+    const [trainingStatKey, setTrainingStatKey] = useState(null);
+    const [trainingAmount, setTrainingAmount] = useState(1);
+    const [maxTrainableAmount, setMaxTrainableAmount] = useState(1);
+    const [totalTrainingCost, setTotalTrainingCost] = useState(0);
 
     // Filter prospects based on mainTab
     const trainees = prospects.filter(p => !p.position);
@@ -141,7 +171,7 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
             const getRating = (p) => {
                 if (p.baseballSkills) {
                     // Use baseball skills if available
-                    const role = p.position === 'Pitcher' ? 'pitcher' : 'fielder';
+                    const role = (p.position === '투수' || p.position === 'Pitcher') ? 'pitcher' : 'fielder';
                     const skills = p.baseballSkills[role];
                     if (role === 'pitcher') {
                         return (skills.stuff.current + skills.control.current + skills.breaking.current) / 3;
@@ -176,42 +206,174 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
         setShowModal(true);
     };
 
-    const handleTrain = (statKey) => {
-        if (!selectedProspect) return;
+    // Helper: Calculate total cost for N points
+    const calculateTotalCost = (startValue, amount, trait, rarity) => {
+        let total = 0;
+        for (let i = 0; i < amount; i++) {
+            total += calculateTrainingCost(startValue + i, trait, rarity);
+        }
+        return total;
+    };
 
+    // Helper: Calculate max points buyable with current XP
+    const getMaxTrainableAmount = (stat, xp, trait, rarity) => {
+        let count = 0;
+        let currentCost = 0;
+        let currentVal = stat.current;
+
+        while (currentVal < stat.potential) {
+            const nextCost = calculateTrainingCost(currentVal, trait, rarity);
+            if (currentCost + nextCost > xp) break;
+            currentCost += nextCost;
+            currentVal++;
+            count++;
+        }
+        return count;
+    };
+
+    const handleBulkTrainClick = (statKey) => {
+        if (!selectedProspect) return;
         const stat = selectedProspect.stats[statKey];
+
         if (stat.current >= stat.potential) {
-            alert("포텐셜 도달!");
+            alert("이미 포텐셜에 도달했습니다!");
             return;
         }
 
-        const cost = calculateTrainingCost(stat.current, selectedProspect.trait);
-        if (xp < cost) {
+        const maxAmount = getMaxTrainableAmount(stat, xp, selectedProspect.trait, selectedProspect.rarity);
+
+        if (maxAmount === 0) {
             showXpAlert("훈련에 필요한 XP가 부족합니다!");
             return;
         }
 
-        // Update Local State (Parent) & Redux
-        const updatedXP = xp - cost;
-        setXp(updatedXP); // Parent state update
-        dispatch(setXpAction(updatedXP)); // Redux update
+        setTrainingStatKey(statKey);
+        setMaxTrainableAmount(maxAmount);
+        setTrainingAmount(1); // Default to 1
+        setTotalTrainingCost(calculateTotalCost(stat.current, 1, selectedProspect.trait, selectedProspect.rarity));
+        setTrainingModalOpen(true);
+    };
 
+    const handleTrainingAmountChange = (e) => {
+        const val = parseInt(e.target.value);
+        if (isNaN(val) || val < 1) {
+            setTrainingAmount(1);
+            return;
+        }
+        const clamped = Math.min(val, maxTrainableAmount);
+        setTrainingAmount(clamped);
+
+        const stat = selectedProspect.stats[trainingStatKey];
+        setTotalTrainingCost(calculateTotalCost(stat.current, clamped, selectedProspect.trait, selectedProspect.rarity));
+    };
+
+    const confirmBulkTrain = async () => {
+        if (!selectedProspect || !trainingStatKey) return;
+
+        // 1. XP Validation (Existing)
+        const isValid = await validateXP();
+        if (!isValid) {
+            // console.log('[Train] XP validation failed');
+            return;
+        }
+
+        // 2. Prospect Data Validation (New: Check against server)
+        if (user) {
+            try {
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const serverData = docSnap.data();
+                    const serverProspects = serverData.prospects || [];
+                    const serverProspect = serverProspects.find(p => p.id === selectedProspect.id);
+
+                    if (serverProspect) {
+                        const serverStat = serverProspect.stats[trainingStatKey];
+                        if (serverStat.current >= serverStat.potential) {
+                            showXpAlert("이미 서버에서 포텐셜에 도달한 능력치입니다! 데이터를 새로고침합니다.");
+                            if (onXpReloadNeeded) onXpReloadNeeded(serverData.xp); // Trigger reload
+                            setTrainingModalOpen(false);
+                            return;
+                        }
+
+                        // Optional: Check if training amount exceeds remaining potential on server
+                        if (serverStat.current + trainingAmount > serverStat.potential) {
+                            showXpAlert("훈련량이 남은 포텐셜을 초과합니다! 데이터를 새로고침합니다.");
+                            if (onXpReloadNeeded) onXpReloadNeeded(serverData.xp);
+                            setTrainingModalOpen(false);
+                            return;
+                        }
+                    } else {
+                        // Prospect might have been deleted?
+                        showXpAlert("선수 데이터를 찾을 수 없습니다. 새로고침합니다.");
+                        if (onXpReloadNeeded) onXpReloadNeeded(serverData.xp);
+                        setTrainingModalOpen(false);
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('[Train] Server validation failed:', error);
+                // Proceed with caution or block? Let's block to be safe if network is okay but logic failed
+                // But if network is down, maybe allow local? User asked for strict sync.
+            }
+        }
+
+        const stat = selectedProspect.stats[trainingStatKey];
+        const cost = totalTrainingCost;
+
+        if (xp < cost) {
+            showXpAlert("XP가 부족합니다!");
+            return;
+        }
+
+        // Update State
+        const updatedXP = xp - cost;
+        setXp(updatedXP);
+        dispatch(setXpAction(updatedXP));
+
+        // Firestore XP Update
+        if (user) {
+            try {
+                await setDoc(doc(db, "users", user.uid), { xp: updatedXP }, { merge: true });
+            } catch (error) {
+                console.error('[Train] Failed to sync XP:', error);
+            }
+        }
+
+        // Update Prospect
         const updatedProspect = {
             ...selectedProspect,
             stats: {
                 ...selectedProspect.stats,
-                [statKey]: {
+                [trainingStatKey]: {
                     ...stat,
-                    current: stat.current + 1
+                    current: stat.current + trainingAmount
                 }
             }
         };
 
         updateProspect(updatedProspect);
         setSelectedPlayer(updatedProspect);
+
+        // Firestore Prospect Update
+        if (user) {
+            try {
+                const userRef = doc(db, "users", user.uid);
+                const currentProspects = prospects.map(p =>
+                    p.id === updatedProspect.id ? updatedProspect : p
+                );
+                await setDoc(userRef, { prospects: currentProspects }, { merge: true });
+            } catch (error) {
+                console.error('[Train] Failed to sync prospect:', error);
+            }
+        }
+
+        setTrainingModalOpen(false);
+        showXpAlert(`훈련 완료! ${BASIC_STATS.find(s => s.key === trainingStatKey).korLabel} +${trainingAmount} (소모 XP: ${cost})`);
     };
 
-    const handleMatching = (position) => {
+    const handleMatching = async (position) => {
         if (!selectedProspect) return;
         const MATCHING_COST = 300;
 
@@ -220,9 +382,28 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
             return;
         }
 
+        // XP 검증
+        const isValid = await validateXP();
+        if (!isValid) {
+            // console.log('[Matching] XP validation failed, aborting matching');
+            return;
+        }
+
         const updatedXP = xp - MATCHING_COST;
         setXp(updatedXP);
         dispatch(setXpAction(updatedXP));
+
+        // 즉시 Firestore에 XP 업데이트
+        if (user) {
+            try {
+                await setDoc(doc(db, "users", user.uid), {
+                    xp: updatedXP
+                }, { merge: true });
+                // console.log('[Matching] XP immediately synced to Firestore:', updatedXP);
+            } catch (error) {
+                console.error('[Matching] Failed to sync XP:', error);
+            }
+        }
 
         const calculated = calculateBaseballStats(selectedProspect, level);
 
@@ -237,7 +418,7 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
             };
         } else {
             // Normal prospects get only the selected position's stats
-            if (position === 'Pitcher') {
+            if (position === '투수') {
                 newSkills = {
                     pitcher: calculated.pitcher,
                     isDual: false
@@ -257,6 +438,23 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
         };
 
         updateProspect(updatedProspect);
+
+        // 즉시 Firestore에 선수 데이터 업데이트
+        if (user) {
+            try {
+                const userRef = doc(db, "users", user.uid);
+                const currentProspects = prospects.map(p =>
+                    p.id === updatedProspect.id ? updatedProspect : p
+                );
+                await setDoc(userRef, {
+                    prospects: currentProspects
+                }, { merge: true });
+                // console.log('[Matching] Prospect data immediately synced to Firestore');
+            } catch (error) {
+                console.error('[Matching] Failed to sync prospect data:', error);
+            }
+        }
+
         setSelectedPlayer(null); // Return to list to see them move to Graduates
         setMainTab('graduates'); // Switch to Graduates tab
         showXpAlert(`매칭 완료! ${position}으로 배치되었습니다. 졸업생으로 이동했습니다.`);
@@ -288,15 +486,26 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
 
     const handleSendToPro = () => {
         if (!selectedProspect) return;
-        // 1. Run "Projection" Simulation
-        const projection = simulateProCareer(selectedProspect);
+        // Open Era Selector instead of immediate simulation
+        setSimulationStep('era_select');
+    };
+
+    const handleEraSelect = (era) => {
+        setSelectedEra(era);
+        setSimulationStep('year_select');
+    };
+
+    const handleYearSelect = (year) => {
+        setTargetYear(year);
+        // Run "Projection" Simulation with selected year
+        const projection = simulateProCareer(selectedProspect, year);
         setProjectedCareer(projection);
         setSimulationStep('projected');
     };
 
     const startActualCareer = () => {
         // 2. Run "Actual" Simulation
-        const actual = simulateProCareer(selectedProspect);
+        const actual = simulateProCareer(selectedProspect, targetYear);
         setActualCareer(actual);
         setDisplayedSeasons([]);
         setSimulationStep('revealing');
@@ -319,29 +528,22 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
 
     // Animation Effect for Revealing Seasons
     useEffect(() => {
+        let interval;
         if (simulationStep === 'revealing' && actualCareer) {
-            const totalSeasons = actualCareer.careerStats.length;
-            const currentCount = displayedSeasons.length;
-
-            if (currentCount < totalSeasons) {
-                const nextSeason = actualCareer.careerStats[currentCount];
-                // Check if this season has awards to determine delay
-                const hasAwards = actualCareer.awards.some(award => award.includes(nextSeason.year.toString())); // Simplified check, ideally award object has year
-                // Actually, awards array is just strings like "MVP (Year 5)". Let's just check if this season was a "good" one based on rating or stats for simplicity, or just constant speed.
-                // Let's use a constant speed for now, maybe slower if it's a big year?
-
-                const delay = 800; // 0.8s per season
-
-                const timer = setTimeout(() => {
-                    setDisplayedSeasons(prev => [...prev, nextSeason]);
-                }, delay);
-
-                return () => clearTimeout(timer);
-            } else {
-                setSimulationStep('finished');
-            }
+            interval = setInterval(() => {
+                setDisplayedSeasons(prev => {
+                    if (prev.length < actualCareer.careerStats.length) {
+                        return [...prev, actualCareer.careerStats[prev.length]];
+                    } else {
+                        clearInterval(interval);
+                        setSimulationStep('finished');
+                        return prev;
+                    }
+                });
+            }, 800); // 0.8s per season
         }
-    }, [simulationStep, actualCareer, displayedSeasons]);
+        return () => clearInterval(interval);
+    }, [simulationStep, actualCareer]);
 
 
     const closeSimulation = () => {
@@ -456,8 +658,11 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
 
                         const getAvgStats = (prospect) => {
                             if (prospect.baseballSkills) {
-                                const role = prospect.position === 'Pitcher' ? 'pitcher' : 'fielder';
+                                const role = (prospect.position === '투수' || prospect.position === 'Pitcher') ? 'pitcher' : 'fielder';
                                 const skills = prospect.baseballSkills[role];
+
+                                if (!skills) return { current: 0, potential: 0 }; // Safety check
+
                                 const currentSum = role === 'pitcher'
                                     ? skills.stuff.current + skills.control.current + skills.breaking.current
                                     : skills.contact.current + skills.power.current + skills.defense.current;
@@ -466,7 +671,7 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                                     : skills.contact.potential + skills.power.potential + skills.defense.potential;
                                 return { current: currentSum / 3, potential: potentialSum / 3 };
                             } else {
-                                const stats = Object.values(prospect.stats);
+                                const stats = Object.values(p.stats);
                                 const currentSum = stats.reduce((sum, s) => sum + s.current, 0);
                                 const potentialSum = stats.reduce((sum, s) => sum + s.potential, 0);
                                 return { current: currentSum / stats.length, potential: potentialSum / stats.length };
@@ -511,7 +716,7 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                                             <div style={{ color: '#aaa' }}>{p.position}</div>
                                             <div style={{ marginTop: '5px' }}>
                                                 등급: <span style={{ color: currentRank.color, fontWeight: 'bold' }}>{currentRank.rank}</span>
-                                            </div>
+                                            </div >
                                         </>
                                     ) : (
                                         // Trainee
@@ -587,7 +792,9 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                             <div className="stat-list">
                                 {BASIC_STATS.map(stat => {
                                     const pStat = selectedProspect.stats[stat.key];
-                                    const cost = calculateTrainingCost(pStat.current, selectedProspect.trait);
+                                    if (!pStat) return null; // Skip if stat doesn't exist (legacy data compatibility)
+
+                                    const cost = calculateTrainingCost(pStat.current, selectedProspect.trait, selectedProspect.rarity);
                                     const isMaxed = pStat.current >= pStat.potential;
 
                                     const currentRankInfo = getStatRank(pStat.current);
@@ -652,14 +859,14 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
 
                                             <button
                                                 className="train-btn"
-                                                onClick={() => handleTrain(stat.key)}
+                                                onClick={() => handleBulkTrainClick(stat.key)}
                                                 disabled={isMaxed || xp < cost}
                                             >
                                                 {isMaxed ? (
                                                     <span>최대</span>
                                                 ) : (
                                                     <>
-                                                        <span className="train-text">+({cost}XP)</span>
+                                                        <span className="train-text">+</span>
                                                     </>
                                                 )}
                                             </button>
@@ -837,6 +1044,9 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                                         </h5>
                                         <div className="stat-list">
                                             {Object.entries(skills).map(([key, val]) => {
+                                                // Ignore 'pitches' key if it exists at top level (prevents F/F stat)
+                                                if (key === 'pitches') return null;
+
                                                 if (key === 'mph') {
                                                     return (
                                                         <div key={key} style={{ marginBottom: '10px', textAlign: 'center', background: '#222', padding: '5px', borderRadius: '5px' }}>
@@ -851,6 +1061,11 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                                                 if (key === 'breaking') {
                                                     const currentRank = getStatRank(val.current);
                                                     const potentialRank = getStatRank(val.potential);
+
+                                                    // Fallback: Check if pitches are inside breaking (new) or at top level (old)
+                                                    // Fallback: Check if pitches are inside breaking (new) or at top level (old)
+                                                    const pitchList = val.pitches || [];
+
                                                     return (
                                                         <div key={key} style={{ marginBottom: '10px' }}>
                                                             {/* Overall Breaking Gauge */}
@@ -870,7 +1085,7 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
 
                                                             {/* List of Pitches */}
                                                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: '5px' }}>
-                                                                {val.pitches.current.map((pitch, idx) => {
+                                                                {pitchList.map((pitch, idx) => {
                                                                     const pRank = getStatRank(pitch.grade);
                                                                     return (
                                                                         <span key={idx} style={{
@@ -943,6 +1158,40 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                         <h2 style={{ color: '#00ffff', textAlign: 'center' }}>PRO CAREER SIMULATION</h2>
                         <h3 style={{ color: '#fff', textAlign: 'center' }}>{selectedProspect.name}</h3>
 
+                        {simulationStep === 'era_select' && (
+                            <div className="era-selector">
+                                <h2>시뮬레이션 시대 선택</h2>
+                                <p>선수가 데뷔할 시대를 선택하세요.</p>
+                                <div className="era-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px', marginTop: '20px' }}>
+                                    {['1980s', '1990s', '2000s', '2010s', '2020s'].map(era => (
+                                        <button key={era} onClick={() => handleEraSelect(era)} style={{ padding: '20px', fontSize: '1.2em', background: '#333', color: '#fff', border: '2px solid #555', borderRadius: '10px', cursor: 'pointer' }}>
+                                            {era}
+                                        </button>
+                                    ))}
+                                </div>
+                                <button onClick={cancelSimulation} style={{ marginTop: '20px', padding: '10px 20px', background: '#444', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>취소</button>
+                            </div>
+                        )}
+
+                        {simulationStep === 'year_select' && (
+                            <div className="year-selector">
+                                <h2>데뷔 연도 선택 ({selectedEra})</h2>
+                                <p>선수가 데뷔할 정확한 연도를 선택하세요.</p>
+                                <div className="year-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', marginTop: '20px' }}>
+                                    {(() => {
+                                        const startYear = parseInt(selectedEra.slice(0, 4));
+                                        const years = Array.from({ length: 10 }, (_, i) => startYear + i);
+                                        return years.map(year => (
+                                            <button key={year} onClick={() => handleYearSelect(year)} style={{ padding: '15px', fontSize: '1.1em', background: '#222', color: '#00ff00', border: '1px solid #00ff00', borderRadius: '5px', cursor: 'pointer' }}>
+                                                {year}
+                                            </button>
+                                        ));
+                                    })()}
+                                </div>
+                                <button onClick={() => setSimulationStep('era_select')} style={{ marginTop: '20px', padding: '10px 20px', background: '#444', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>뒤로가기</button>
+                            </div>
+                        )}
+
                         {/* Step 1: Projected Career */}
                         {simulationStep === 'projected' && projectedCareer && (
                             <div className="simulation-step-container">
@@ -979,10 +1228,10 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                                                 <th>Year</th>
                                                 <th>Age</th>
                                                 <th>OVR</th>
-                                                {selectedProspect.position === 'Pitcher' ? (
+                                                {(selectedProspect.position === '투수' || selectedProspect.position === 'Pitcher') ? (
                                                     <>
-                                                        <th>W</th>
-                                                        <th>L</th>
+                                                        <th>Wins</th>
+                                                        <th>Loss</th>
                                                         <th>ERA</th>
                                                         <th>SO</th>
                                                     </>
@@ -999,10 +1248,8 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                                         </thead>
                                         <tbody>
                                             {displayedSeasons.map((stat, idx) => {
-                                                // Check for awards in this year
-                                                // Note: actualCareer.awards is array of strings like "MVP (Year 5)"
-                                                // We need to parse or match.
-                                                const yearAwards = actualCareer.awards.filter(a => a.includes(`(Year ${stat.year})`));
+                                                // Check for awards in this year (Korean suffix match)
+                                                const yearAwards = actualCareer.awards.filter(a => a.includes(`(${stat.year}년차)`));
                                                 const isAwardYear = yearAwards.length > 0;
 
                                                 return (
@@ -1010,7 +1257,7 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                                                         <td>{stat.year}</td>
                                                         <td>{stat.age}</td>
                                                         <td style={{ color: '#ffd700' }}>{stat.rating}</td>
-                                                        {selectedProspect.position === 'Pitcher' ? (
+                                                        {(selectedProspect.position === '투수' || selectedProspect.position === 'Pitcher') ? (
                                                             <>
                                                                 <td>{stat.wins}</td>
                                                                 <td>{stat.losses}</td>
@@ -1025,10 +1272,10 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                                                                 <td>{stat.ops}</td>
                                                             </>
                                                         )}
-                                                        <td>
+                                                        <td style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                                                             {yearAwards.map((award, i) => (
-                                                                <span key={i} style={{ fontSize: '0.8em', color: '#000', background: '#ffd700', padding: '2px 5px', borderRadius: '5px', display: 'block', marginBottom: '2px' }}>
-                                                                    {award.split(' (')[0]}
+                                                                <span key={i} style={{ fontSize: '0.8em', color: '#000', background: '#ffd700', padding: '2px 5px', borderRadius: '5px', whiteSpace: 'nowrap' }}>
+                                                                    {award.split(' (')[0]} {'⭐'.repeat(yearAwards.length)}
                                                                 </span>
                                                             ))}
                                                         </td>
@@ -1113,6 +1360,69 @@ const TeamManagement = ({ prospects, updateProspect, xp, setXp, level }) => {
                         }}>
                             클릭하거나 ESC를 눌러 닫기
                         </p>
+                    </div>
+                </div>
+            )}
+            {/* Bulk Training Modal */}
+            {trainingModalOpen && selectedProspect && trainingStatKey && (
+                <div className="modal-overlay" style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    background: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 2000
+                }}>
+                    <div className="modal-content" style={{
+                        background: '#222', padding: '30px', borderRadius: '10px', width: '90%', maxWidth: '400px',
+                        border: '2px solid #00ffff', boxShadow: '0 0 20px rgba(0, 255, 255, 0.3)', color: '#fff'
+                    }}>
+                        <h3 style={{ color: '#00ffff', textAlign: 'center', marginBottom: '20px' }}>
+                            {BASIC_STATS.find(s => s.key === trainingStatKey)?.korLabel} 집중 훈련
+                        </h3>
+
+                        <div style={{ marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                                <span>현재 능력치:</span>
+                                <span style={{ fontWeight: 'bold' }}>{selectedProspect.stats[trainingStatKey].current}</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                                <span>훈련 후 능력치:</span>
+                                <span style={{ fontWeight: 'bold', color: '#00ff00' }}>
+                                    {selectedProspect.stats[trainingStatKey].current + trainingAmount}
+                                </span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                                <span>소모 XP:</span>
+                                <span style={{ fontWeight: 'bold', color: '#ffd700' }}>{totalTrainingCost} XP</span>
+                            </div>
+                        </div>
+
+                        <div style={{ marginBottom: '25px' }}>
+                            <label style={{ display: 'block', marginBottom: '10px', color: '#aaa' }}>훈련량 조절 (최대 {maxTrainableAmount})</label>
+                            <input
+                                type="range"
+                                min="1"
+                                max={maxTrainableAmount}
+                                value={trainingAmount}
+                                onChange={handleTrainingAmountChange}
+                                style={{ width: '100%', marginBottom: '10px' }}
+                            />
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max={maxTrainableAmount}
+                                    value={trainingAmount}
+                                    onChange={handleTrainingAmountChange}
+                                    style={{
+                                        background: '#333', border: '1px solid #555', color: '#fff',
+                                        padding: '5px', borderRadius: '4px', width: '60px', textAlign: 'center', fontSize: '1.2em'
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <button onClick={() => setTrainingModalOpen(false)} style={{ flex: 1, background: '#555', padding: '10px', border: 'none', borderRadius: '5px', color: '#fff', cursor: 'pointer' }}>취소</button>
+                            <button onClick={confirmBulkTrain} style={{ flex: 1, background: '#00ffff', padding: '10px', border: 'none', borderRadius: '5px', color: '#000', fontWeight: 'bold', cursor: 'pointer' }}>훈련 확정</button>
+                        </div>
                     </div>
                 </div>
             )}

@@ -15,7 +15,7 @@ const persistConfig = {
     key: 'root',
     storage,
     transforms: [encryptTransform],
-    whitelist: ['game'], // Only persist game data locally. Auth is handled by Firebase/Session.
+    whitelist: ['game'], // Only persist game data. Auth handled by Firebase, sessionConflictHandled by sessionStorage.
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

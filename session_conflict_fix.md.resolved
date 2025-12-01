@@ -1,0 +1,80 @@
+# 세션 충돌 모달 문제 해결
+
+## 문제
+
+새로고침할 때마다 세션 충돌 모달이 계속 표시되는 문제
+
+## 원인
+
+### 1. sessionId가 리렌더링마다 변경됨
+```javascript
+// 문제 코드
+const [sessionId] = useState(() => crypto.randomUUID());
+```
+- `useState`로 sessionId 관리
+- 컴포넌트 리렌더링 시 새로운 ID 생성
+- Firestore에 저장된 ID와 불일치 → 모달 표시
+
+### 2. Firebase 인증 로딩 중 sessionStorage 초기화
+```javascript
+// 문제 코드
+if (!user) {
+    sessionStorage.removeItem('sessionId'); // ← Firebase 로딩 중에도 실행!
+}
+```
+- 페이지 로드 시 Firebase 인증 상태가 일시적으로 `null`
+- sessionStorage에서 sessionId가 삭제됨
+- 새로운 ID 생성 → 충돌 발생
+
+## 해결 방법
+
+### 1. sessionStorage 직접 사용
+```javascript
+// 해결 코드
+const getSessionId = () => {
+    let stored = sessionStorage.getItem('sessionId');
+    if (!stored) {
+        stored = crypto.randomUUID();
+        sessionStorage.setItem('sessionId', stored);
+    }
+    return stored;
+};
+
+const sessionId = getSessionId(); // useState 대신
+```
+- 리렌더링해도 항상 같은 ID 반환
+- sessionStorage에서 직접 읽기
+
+### 2. 실제 로그아웃만 sessionStorage 초기화
+```javascript
+// 해결 코드
+const previousUserRef = useRef(user);
+
+if (!user) {
+    if (previousUserRef.current) {
+        // 이전에 user 있었음 → 실제 로그아웃
+        sessionStorage.removeItem('sessionId');
+    } else {
+        // 초기 로딩 중 → sessionStorage 유지
+    }
+}
+```
+- `useRef`로 이전 user 상태 추적
+- 실제 로그아웃과 초기 로딩 구분
+
+### 3. App.jsx에서 sessionStorage 직접 읽기
+```javascript
+// 해결 코드
+const currentSessionId = sessionStorage.getItem('sessionId');
+await setDoc(docRef, {
+    activeSession: { sessionId: currentSessionId, ... }
+});
+```
+- 클로저 문제 방지
+- 항상 최신 sessionId 사용
+
+## 결과
+
+✅ 같은 탭 새로고침 → 모달 표시 안 됨  
+✅ 로그아웃 후 로그인 → 모달 정상 표시  
+✅ 다른 탭/브라우저 로그인 → 모달 정상 표시

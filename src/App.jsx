@@ -18,6 +18,10 @@ import TeamPage from './pages/TeamPage';
 import ReviewPage from './pages/ReviewPage';
 import HallOfFamePage from './pages/HallOfFamePage';
 
+import SessionConflictModal from './components/common/SessionConflictModal';
+import XpSyncModal from './components/common/XpSyncModal';
+import useSessionManager from './hooks/useSessionManager';
+
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
@@ -75,13 +79,112 @@ const RefreshButton = ({ onRefresh, isRefreshing }) => {
 function App() {
   const [pipWindow, setPipWindow] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false); // Track if Firestore data is loaded
   const dispatch = useDispatch();
 
   // Redux State
   const { user, loading } = useSelector(state => state.auth);
   const { xp, level, prospects, wrongAnswers } = useSelector(state => state.game);
 
-  // Auth Listener & Data Loading
+  // Session Management
+  const [conflictType, setConflictType] = useState(null);
+  const { sessionId, previousSessionId } = useSessionManager(user, setConflictType);
+
+  // XP Sync Modal
+  const [xpSyncModal, setXpSyncModal] = useState(null);
+
+  const handleXpReloadNeeded = (serverXP) => {
+    setXpSyncModal({ localXP: xp, serverXP });
+  };
+
+  const confirmXpReload = async () => {
+    await handleRefresh();
+    setXpSyncModal(null);
+  };
+
+  const handleSessionAction = async (action) => {
+    if (action === 'logout_other') {
+      // 사용자가 '예' 선택 - 타 기기 로그아웃
+      // console.log('[Session] User chose to logout other session');
+
+      if (!previousSessionId) {
+        console.error('[Session] No previous session ID found');
+        setConflictType(null);
+        return;
+      }
+
+      try {
+        const docRef = doc(db, "users", user.uid);
+
+        // sessionStorage에서 현재 sessionId 직접 읽기 (클로저 문제 방지)
+        const currentSessionId = sessionStorage.getItem('sessionId');
+
+        // console.log('[App DEBUG] Saving sessionId to Firestore:', currentSessionId);
+        // console.log('[App DEBUG] previousSessionId:', previousSessionId);
+
+        // 1. 새 세션 저장하고 동시에 기존 세션에 forceLogout 설정
+        await setDoc(docRef, {
+          activeSession: {
+            sessionId: currentSessionId,
+            loginTime: new Date(),
+            userAgent: navigator.userAgent,
+            lastActivity: new Date(),
+            forceLogout: previousSessionId,  // 기존 세션을 강제 로그아웃
+          }
+        }, { merge: true });
+
+        // console.log(`[Session] New session saved, force logout set for: ${previousSessionId}`);
+
+      } catch (error) {
+        console.error('[Session] Failed to set force logout:', error);
+      }
+
+      setConflictType(null); // 모달 닫기
+    } else if (action === 'keep_both') {
+      // 사용자가 '아니요' 선택 - 새 세션 저장하지만 기존 세션 유지
+      // console.log('[Session] User chose to keep both sessions');
+
+      try {
+        const docRef = doc(db, "users", user.uid);
+
+        // sessionStorage에서 현재 sessionId 직접 읽기 (클로저 문제 방지)
+        const currentSessionId = sessionStorage.getItem('sessionId');
+
+        // console.log('[App DEBUG keep_both] Saving sessionId to Firestore:', currentSessionId);
+
+        // 새 세션만 저장 (forceLogout 없음)
+        await setDoc(docRef, {
+          activeSession: {
+            sessionId: currentSessionId,
+            loginTime: new Date(),
+            userAgent: navigator.userAgent,
+            lastActivity: new Date(),
+          }
+        }, { merge: true });
+
+        // console.log(`[Session] New session saved, keeping previous session active`);
+
+      } catch (error) {
+        console.error('[Session] Failed to save session:', error);
+      }
+
+      setConflictType(null); // 모달 닫기
+      // TODO: XP 검증 로직 필요
+    }
+  };
+
+  // kicked 타입일 때 자동 로그아웃
+  useEffect(() => {
+    if (conflictType === 'kicked') {
+      const timer = setTimeout(async () => {
+        // console.log('[Session] Logging out due to force logout...');
+        await handleLogout();
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [conflictType]);
+
+  // Auth Listener & Data Loading (Firestore First!)
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       // Only store serializable data in Redux to avoid freezing the Firestore instance
@@ -95,20 +198,28 @@ function App() {
       dispatch(setUser(serializableUser));
 
       if (currentUser) {
-        // Load data from Firestore
-        const docRef = doc(db, "users", currentUser.uid);
-        const docSnap = await getDoc(docRef);
+        // Load data from Firestore FIRST (Priority)
+        try {
+          const docRef = doc(db, "users", currentUser.uid);
+          const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          dispatch(setGameData(docSnap.data()));
-        } else {
-          // New user or no data, save initial state? 
-          // Or just let the auto-save handle it on first change.
+          if (docSnap.exists()) {
+            const firestoreData = docSnap.data();
+            // console.log('[Data Load] Firestore data loaded:', firestoreData);
+            // Override Redux Persist data with Firestore data
+            dispatch(setGameData(firestoreData));
+          } else {
+            // console.log('[Data Load] No Firestore data, using local/default');
+            // New user - will save on first change
+          }
+        } catch (error) {
+          console.error('[Data Load] Firestore load error:', error);
+        } finally {
+          setDataLoaded(true); // Data load complete
         }
       } else {
         // Guest mode: Redux Persist handles loading from LocalStorage
-        // If we want to clear data on explicit logout, we handle it in the logout function.
-        // But if the user just visits without login, we keep the local data.
+        setDataLoaded(true);
       }
       dispatch(setLoading(false));
     });
@@ -131,11 +242,39 @@ function App() {
     };
   }, [location.pathname]);
 
+  // Auto-reload on window focus/visibility change
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && user) {
+        // console.log('[App] Window focused, refreshing data...');
+        handleRefresh();
+      }
+    };
+
+    const handleWindowFocus = () => {
+      if (user) {
+        // console.log('[App] Window focus event, refreshing data...');
+        handleRefresh();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleWindowFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleWindowFocus);
+    };
+  }, [user]);
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
       dispatch(setUser(null));
       dispatch(resetGame()); // Clear game data on logout
+
+      // 페이지 새로고침으로 세션 상태 완전히 초기화
+      window.location.reload();
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -149,8 +288,12 @@ function App() {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        dispatch(setGameData(docSnap.data()));
-        console.log("Data refreshed from Firestore!");
+        const firestoreData = docSnap.data();
+        // console.log('[Refresh] Firestore data:', firestoreData);
+        // console.log('[Refresh] Prospects from Firestore:', firestoreData.prospects);
+
+        dispatch(setGameData(firestoreData));
+        // console.log("Data refreshed from Firestore!");
       }
     } catch (error) {
       console.error("Refresh failed:", error);
@@ -171,7 +314,7 @@ function App() {
             wrongAnswers,
             lastUpdated: new Date()
           }, { merge: true });
-          console.log("Data saved to Firestore successfully!");
+          // console.log("Data saved to Firestore successfully!");
         } catch (e) {
           console.error("Error saving data:", e);
         }
@@ -268,11 +411,35 @@ function App() {
     }
   };
 
-  if (loading) return <div className="loading-screen">Loading...</div>;
+  // Show loading until both auth and data are ready
+  if (loading || !dataLoaded) {
+    return (
+      <div className="loading-screen">
+        <div style={{ fontSize: '3em', marginBottom: '20px' }}>⏳</div>
+        <h2>Loading...</h2>
+        <p style={{ marginTop: '10px', color: '#888' }}>
+          {loading ? 'Checking authentication...' : 'Loading your data...'}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
       <ScrollToTop />
+
+      {/* Session Conflict Modal */}
+      {conflictType && <SessionConflictModal type={conflictType} onAction={handleSessionAction} />}
+
+      {/* XP Sync Modal */}
+      {xpSyncModal && (
+        <XpSyncModal
+          localXP={xpSyncModal.localXP}
+          serverXP={xpSyncModal.serverXP}
+          onConfirm={confirmXpReload}
+        />
+      )}
+
       <div className="app-container">
         {user && <RefreshButton onRefresh={handleRefresh} isRefreshing={isRefreshing} />}
         {pipWindow ? (
@@ -325,6 +492,8 @@ function App() {
                   xp={xp}
                   setXp={handleSetXp}
                   addProspect={handleAddProspect}
+                  user={user}
+                  onXpReloadNeeded={handleXpReloadNeeded}
                 />
               } />
               <Route path="/team" element={
@@ -334,6 +503,8 @@ function App() {
                   xp={xp}
                   setXp={handleSetXp}
                   level={level}
+                  user={user}
+                  onXpReloadNeeded={handleXpReloadNeeded}
                 />
               } />
               <Route path="/review" element={

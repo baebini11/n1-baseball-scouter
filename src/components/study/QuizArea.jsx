@@ -21,10 +21,16 @@ const QuizArea = ({ vocab, kanji, grammar, addToGlobalReview, globalWrongAnswers
         }
     }, [initialMode, customData]);
 
+    // Helper: Limit reading array to max 3 items
+    const limitReading = (arr, max = 3) => {
+        if (!arr || arr.length === 0) return '';
+        return arr.slice(0, max).join(', ');
+    };
+
     const getReading = (item) => {
         if (item.furigana) return item.furigana;
-        const on = item.onyomi ? item.onyomi.join(', ') : '';
-        const kun = item.kunyomi ? item.kunyomi.join(', ') : '';
+        const on = item.onyomi ? limitReading(item.onyomi, 3) : '';
+        const kun = item.kunyomi ? limitReading(item.kunyomi, 3) : '';
         if (on && kun) return `${on} / ${kun}`;
         return on || kun || item.kanji;
     };

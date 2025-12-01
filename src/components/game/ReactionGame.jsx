@@ -13,6 +13,8 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
     const [wrongQuestions, setWrongQuestions] = useState([]);
     const [feedback, setFeedback] = useState(null); // null, 'correct', 'wrong'
     const [showReview, setShowReview] = useState(false);
+    const [usedQuestionIds, setUsedQuestionIds] = useState([]); // Track used questions to prevent duplicates
+    const [currentTotalQuestions, setCurrentTotalQuestions] = useState(20); // Fixed total questions for current session
 
     const timerRef = useRef(null);
 
@@ -33,10 +35,16 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
         return () => clearTimeout(timerRef.current);
     }, [timeLeft, gameState, feedback]);
 
+    // Helper: Limit reading array to max 3 items
+    const limitReading = (arr, max = 3) => {
+        if (!arr || arr.length === 0) return '';
+        return arr.slice(0, max).join(', ');
+    };
+
     const getReadingString = (item) => {
         if (item.furigana) return item.furigana;
-        const on = item.onyomi ? item.onyomi.join(', ') : '';
-        const kun = item.kunyomi ? item.kunyomi.join(', ') : '';
+        const on = item.onyomi ? limitReading(item.onyomi, 3) : '';
+        const kun = item.kunyomi ? limitReading(item.kunyomi, 3) : '';
         if (on && kun) return `${on} / ${kun}`;
         return on || kun || '';
     };
@@ -49,11 +57,17 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
         setWrongQuestions([]);
         setShowReview(false);
         setFeedback(null);
+        setUsedQuestionIds([]); // Reset used questions for new game
+
+        // Fix total questions for this session BEFORE level up
+        const fixedTotal = selectedMode === 'boss' ? bossQuestionsCount : 20;
+        setCurrentTotalQuestions(fixedTotal);
+
         setGameState(selectedMode === 'boss' ? 'boss_playing' : 'playing');
-        nextQuestion(selectedMode);
+        nextQuestion(selectedMode, []);
     };
 
-    const nextQuestion = (currentMode) => {
+    const nextQuestion = (currentMode, currentUsedIds = null) => {
         setFeedback(null);
         const targetCount = currentMode === 'boss' ? bossQuestionsCount : 20;
         if (questionCount >= targetCount) {
@@ -71,6 +85,9 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
             return;
         }
 
+        // Use provided usedIds or current state
+        const usedIds = currentUsedIds !== null ? currentUsedIds : usedQuestionIds;
+
         // Mix words and grammar
         let isWord;
         if (hasWords && hasGrammar) {
@@ -80,7 +97,18 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
         }
 
         const source = isWord ? words : grammar;
-        const item = source[Math.floor(Math.random() * source.length)];
+
+        // Filter out already used questions
+        let availableItems = source.filter(item => !usedIds.includes(item.id));
+
+        // If all items have been used, reset the pool
+        if (availableItems.length === 0) {
+            availableItems = source;
+            setUsedQuestionIds([]);
+        }
+
+        // Select random item from available pool
+        const item = availableItems[Math.floor(Math.random() * availableItems.length)];
 
         let questionText, correct, distractors;
 
@@ -106,11 +134,11 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
 
                 if (targetType === 'onyomi') {
                     questionText = `${item.kanji} (Onyomi?)`;
-                    correct = item.onyomi.join(', ');
+                    correct = limitReading(item.onyomi, 3);
                     targetLabel = 'Onyomi';
                 } else if (targetType === 'kunyomi') {
                     questionText = `${item.kanji} (Kunyomi?)`;
-                    correct = item.kunyomi.join(', ');
+                    correct = limitReading(item.kunyomi, 3);
                     targetLabel = 'Kunyomi';
                 } else {
                     questionText = item.kanji;
@@ -142,10 +170,10 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
 
                 let questionLabel = '';
                 if (sourceType === 'onyomi') {
-                    questionText = item.onyomi.join(', ');
+                    questionText = limitReading(item.onyomi, 3);
                     questionLabel = '(Onyomi)';
                 } else if (sourceType === 'kunyomi') {
-                    questionText = item.kunyomi.join(', ');
+                    questionText = limitReading(item.kunyomi, 3);
                     questionLabel = '(Kunyomi)';
                 } else {
                     questionText = reading;
@@ -178,6 +206,9 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
         setOptions(allOptions);
         setTimeLeft(currentMode === 'boss' ? 3 : 5);
         setQuestionCount(prev => prev + 1);
+
+        // Mark this question as used
+        setUsedQuestionIds(prev => [...prev, item.id]);
     };
 
 
@@ -187,8 +218,8 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
         const shuffled = others.sort(() => Math.random() - 0.5);
         return shuffled.slice(0, 3).map(d => {
             if (type === 'reading') {
-                if (targetLabel === 'Onyomi' && d.onyomi && d.onyomi.length > 0) return d.onyomi.join(', ');
-                if (targetLabel === 'Kunyomi' && d.kunyomi && d.kunyomi.length > 0) return d.kunyomi.join(', ');
+                if (targetLabel === 'Onyomi' && d.onyomi && d.onyomi.length > 0) return limitReading(d.onyomi, 3);
+                if (targetLabel === 'Kunyomi' && d.kunyomi && d.kunyomi.length > 0) return limitReading(d.kunyomi, 3);
                 return getReadingString(d);
             }
             return d[type];
@@ -308,7 +339,16 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
                             </div>
                             <button
                                 className="back-btn-small"
-                                onClick={() => setGameState('menu')}
+                                onClick={() => {
+                                    // Reset all game states when exiting to menu
+                                    setScore(0);
+                                    setQuestionCount(0);
+                                    setCombo(0);
+                                    setWrongQuestions([]);
+                                    setFeedback(null);
+                                    setUsedQuestionIds([]);
+                                    setGameState('menu');
+                                }}
                                 style={{
                                     marginTop: '10px',
                                     background: 'transparent',
@@ -361,15 +401,25 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
                             setShowReview(true);
                         }}>REVIEW MISTAKES</button>
                     )}
-                    <button className="menu-btn" onClick={() => setGameState('menu')}>TRY AGAIN</button>
+                    <button className="menu-btn" onClick={() => {
+                        // Reset all game states when trying again
+                        setScore(0);
+                        setQuestionCount(0);
+                        setCombo(0);
+                        setWrongQuestions([]);
+                        setFeedback(null);
+                        setUsedQuestionIds([]);
+                        setShowReview(false);
+                        setGameState('menu');
+                    }}>TRY AGAIN</button>
                 </div>
             )}
 
             {gameState === 'result' && !showReview && (
                 <div className="result-screen success">
-                    <h2>{mode === 'boss' && questionCount === bossQuestionsCount ? "VICTORY!" : "COMPLETE!"}</h2>
-                    <p>Score: {score} / {totalQuestions}</p>
-                    {mode === 'boss' && questionCount === bossQuestionsCount && (
+                    <h2>{mode === 'boss' && score === currentTotalQuestions ? "VICTORY!" : "COMPLETE!"}</h2>
+                    <p>Score: {score} / {currentTotalQuestions}</p>
+                    {mode === 'boss' && score === currentTotalQuestions && (
                         <>
                             <p className="levelup-text">LEVEL UP! 🆙</p>
                             <p style={{ color: '#ffd700', fontFamily: 'Press Start 2P' }}>+5 GACHA TICKETS!</p>
@@ -383,9 +433,17 @@ const ReactionGame = ({ words, grammar, onExit, level, setLevel, xp, setXp, addT
                     )}
 
                     <button className="menu-btn" onClick={() => {
-                        if (mode === 'boss' && questionCount === bossQuestionsCount) {
+                        if (mode === 'boss' && score === currentTotalQuestions) {
                             setXp(prev => Math.max(0, prev - bossCost)); // Deduct cost
                         }
+                        // Reset all game states before returning to menu
+                        setScore(0);
+                        setQuestionCount(0);
+                        setCombo(0);
+                        setWrongQuestions([]);
+                        setFeedback(null);
+                        setUsedQuestionIds([]);
+                        setShowReview(false);
                         setGameState('menu');
                     }}>CONTINUE</button>
                 </div>

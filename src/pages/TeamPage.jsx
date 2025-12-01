@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import TeamManagement from '../components/team/TeamManagement';
 
-const TeamPage = ({ prospects, updateProspect, xp, setXp, level }) => {
+const TeamPage = ({ prospects, updateProspect, xp, setXp, level, user, onXpReloadNeeded }) => {
     const navigate = useNavigate();
 
     return (
@@ -14,6 +14,8 @@ const TeamPage = ({ prospects, updateProspect, xp, setXp, level }) => {
                 xp={xp}
                 setXp={setXp}
                 level={level}
+                user={user}
+                onXpReloadNeeded={onXpReloadNeeded}
             />
         </div>
     );

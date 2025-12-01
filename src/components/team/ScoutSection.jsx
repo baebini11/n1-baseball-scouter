@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
 import { generateProspect, getStatRank, BASIC_STATS } from '../../utils/prospectUtils';
+import useXpValidation from '../../hooks/useXpValidation';
 import './GachaSection.css';
 
-const ScoutSection = ({ xp, setXp, addProspect }) => {
+const ScoutSection = ({ xp, setXp, addProspect, user, onXpReloadNeeded }) => {
     const [isRevealing, setIsRevealing] = useState(false);
     const [revealedProspect, setRevealedProspect] = useState(null);
     const [revealStage, setRevealStage] = useState(0); // 0: Start, 1: Rarity, 2: Name, 3: Trait, 4: Stats
 
     const SCOUT_COST = 300;
+
+    // XP 검증 훅
+    const { validateXP, isValidating } = useXpValidation(user, xp, onXpReloadNeeded);
 
     useEffect(() => {
         if (isRevealing && revealedProspect) {
@@ -21,10 +27,30 @@ const ScoutSection = ({ xp, setXp, addProspect }) => {
         }
     }, [isRevealing, revealedProspect]);
 
-    const scoutPlayer = () => {
+    const scoutPlayer = async () => {
         if (xp < SCOUT_COST) return;
 
-        setXp(prev => prev - SCOUT_COST);
+        // XP 검증
+        const isValid = await validateXP();
+        if (!isValid) {
+            console.log('[Scout] XP validation failed, aborting scout');
+            return;
+        }
+
+        const newXP = xp - SCOUT_COST;
+        setXp(newXP);
+
+        // 즉시 Firestore에 XP 업데이트
+        if (user) {
+            try {
+                await setDoc(doc(db, "users", user.uid), {
+                    xp: newXP
+                }, { merge: true });
+                console.log('[Scout] XP immediately synced to Firestore:', newXP);
+            } catch (error) {
+                console.error('[Scout] Failed to sync XP:', error);
+            }
+        }
 
         const newProspect = generateProspect();
         addProspect(newProspect);
@@ -59,9 +85,9 @@ const ScoutSection = ({ xp, setXp, addProspect }) => {
                 <button
                     className="pull-button"
                     onClick={scoutPlayer}
-                    disabled={xp < SCOUT_COST}
+                    disabled={xp < SCOUT_COST || isValidating}
                 >
-                    {xp >= SCOUT_COST ? `SCOUT (300 XP)` : "NEED MORE XP"}
+                    {isValidating ? "검증 중..." : xp >= SCOUT_COST ? `SCOUT (300 XP)` : "NEED MORE XP"}
                 </button>
             </div>
 
